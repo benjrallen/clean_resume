@@ -1,0 +1,289 @@
+// Here's where we define some default constants
+@import "partials/base";
+
+//look in base for other variables
+$inner-content-padding: 20px;
+
+body{
+	padding-top: 40px;
+	@include crimson;
+	background: $base-white;
+}
+
+.page-title{
+	@include raleway;
+}
+
+
+/* Parts */
+
+$sidebar-width: 232px;
+
+//@import "theme/header";
+	//@import "theme/banner_bars";
+//@import "theme/body";
+//@import "theme/front_page";
+//@import "theme/sidebar";
+//@import "theme/rotator";
+//@import "theme/footer_nav";
+//@import "theme/footer";
+//@import "theme/page_post";
+//@import "theme/page_contact_us";
+//@import "theme/contact_form";
+//@import "theme/easeYouTubeVideos";
+	//@import "theme/mailchimp_subscribe";
+	//@import "theme/photo_gallery";
+
+
+@import "theme/front_page";
+@import "theme/work";
+@import "theme/top_nav";
+@import "theme/map.scss";
+@import "theme/contact_form";
+
+
+/* End Parts */
+
+//body > .bgNoise{
+//	position: fixed;
+//}
+
+/*
+.bgNoise{
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	top: 0;
+	left: 0;
+	background: $base-bg url('../images/transparent-noise-8.png');
+	z-index: 0;
+	
+	&.lowest{
+		position: fixed;
+	}
+}
+*/
+.wrap{
+	//width:$base-width;
+	//margin:0 auto;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	float: none;
+}
+
+.arrow.big{
+	@include main-sprite;
+	background-position: -350px 0;
+	height: 100px;
+	width: 50px;
+	//display: inline-block;
+	@include inline-block;
+	//vertical-align: middle;
+	@include opacity( 0.6 );
+	position: relative;
+}
+
+#resumeHref{
+	display: none;
+}
+
+.sep{
+	//display: inline-block;
+	@include inline-block;
+	height: 8px;
+	width: 16px;
+	@include main-sprite;
+	text-indent: -9999em;
+	margin-left: 1em;
+	margin-right: 1em;
+	background-position: 0 -165px;
+}
+.lte7 .sep{
+	margin-bottom: 0.75em;
+}
+.clearfix{
+	@include pie-clearfix;
+}
+.alignleft{
+	@include float-left;
+	margin-right: 1em;
+}
+.alignright{
+	@include float-right;
+	margin-left: 1em;
+}
+.alignnone{}
+.aligncenter{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+
+#subwayTilesWrap{
+	position: fixed;
+	display: block;
+	height: 100%;
+	width: 100%;
+	background: rgba(255,255,255,0.95);
+	z-index: 100000;
+	overflow-y: scroll;
+	display: none;
+	
+	& #closeSubwayTiles{
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		@include padding-leader(0.25);
+		@include padding-trailer(0.25);
+		padding-left: 1em;
+		padding-right: 1em;
+		color: #font-color;
+		background: $base-bg;
+		//border-right: 1px solid $font-color;
+		//border-bottom: 1px solid $font-color;
+		@include opacity(0.8);
+		@include adjust-font-size-to( 14px );
+		cursor: pointer;
+		cursor: hand;
+		
+		&:hover{
+			@include opacity(1);
+			
+			& small{
+				display: inline;
+			}
+		}
+		
+		& small{
+			display: none;
+			margin-left: 1em;
+			//position: absolute;
+			//right: -15em;
+			//top: 0;
+			//width: 14em;
+			//color: $base-bg;
+			//@include padding-leader(0.25);
+		}
+	}
+
+	& #jsui{
+		margin: 0;
+		display: block;
+		//width: 16em;
+		width: 200px;
+		background-color:rgba(0,0,0,0.6);
+		color: $base-color;
+		position:fixed;
+		right:0;
+		top:0;
+		z-index: 11;
+		max-height: 100%;
+		overflow-y: auto;
+		margin-right: 1.4em;
+		
+		& header{
+			display: block;
+			
+			& h4{
+				@include adjust-font-size-to(24px);
+				font-weight:bold;
+				letter-spacing:-2px;
+				@include single-text-shadow(none);
+				margin-left: 1em;
+				margin-right: 1em;
+				@include margin-leader(0.5);
+				@include margin-trailer(0.25);
+				color: lighten( $base-color, 5% );
+				border-bottom:3px solid;
+				font-family: futura, helvetica, arial, sans-serif;
+				cursor:pointer;
+				cursor:hand;
+				text-align:center;
+				
+				&:hover{
+					color: darken( $base-color, 5% );
+				}
+				&:active{
+					color: darken( $base-color, 10% );
+				}
+			}
+		}
+		
+		& ul#posts{
+			@include margin-leader(0.125);
+			@include margin-trailer(0.25);
+			display: block;
+			margin-left: 1em;
+			margin-right: 1em;
+			
+			& li{
+				@include margin-leader(0.5);
+				margin-left: 1em;
+			
+				& a{
+					text-decoration: none;
+					color: $base-color;
+					
+					&:hover{
+						color: $base-button-color;
+					}
+				}
+			}
+		}
+		
+		& #menuToggle{
+			display: block;
+			@include margin-leader();
+			@include margin-trailer(0.5);
+			width: 20%;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+			@include adjust-font-size-to(10px);
+			@include border-radius(2px);
+			cursor: default;
+
+			&:hover{
+				background-color:rgba(255,255,255,0.2);	
+			}
+			&:active{
+				background-color:rgba(255,255,255,0.1);	
+			}
+		}
+	}
+
+	
+	& #subwayTiles{
+		position: relative;
+		z-index: 1;
+		
+		& img{
+			display: inline-block;
+			vertical-align: top;
+		}
+	}
+}
+
+
+$mobile-menu-height: 4em;
+$mobile-menu-color: #E7E9EF;
+
+/* --- less than main size --- */
+@media screen and (max-width: 960px) {
+
+}
+
+/* --- iPad Portrait --- */
+@media screen and (max-width: 880px) {
+}
+
+/* --- Smartphones and small Tablet PCs --- */
+@media screen and (max-width : 620px) {
+
+}

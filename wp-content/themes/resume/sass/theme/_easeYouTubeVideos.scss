@@ -1,0 +1,199 @@
+//-----------------------------------------------
+// The following scss stylesheet provides
+// default styles for the easeYouTubeVideo
+// plugin written by Benjamin Allen
+//-----------------------------------------------
+
+//number of columns
+$gv-num-columns: 3;
+$gv-base-radius: 3px;
+$gv-thumb-block-spacing: 1%;
+$gv-box-bg: lighten($base-bg, 5%);
+$gv-border-color: darken( $gv-box-bg, 20% );
+$gv-transition-speed: 0.1s;
+
+.easeVideos{
+	
+	position:relative;
+	min-height: 368px;
+	display: block;
+	
+	
+	& #easeLoadingMask{}
+	
+	& .easeCont{
+		text-align: center;
+		
+		& .easeThumbBlock{
+			//display: inline-block;
+			@include inline-block;
+			vertical-align: top;
+			width: floor( (94% - $gv-thumb-block-spacing * 2 * $gv-num-columns) / $gv-num-columns );
+			vertical-align:top;
+			margin-left: $gv-thumb-block-spacing;
+			margin-right: $gv-thumb-block-spacing;
+			@include margin-trailer;
+			@include padding-leader(0.75);
+			@include padding-trailer(0.75);
+			
+			@include border-radius( $gv-base-radius );
+			
+			background: $gv-box-bg;
+			border: 1px solid $gv-border-color;
+			
+			@include single-transition( background, $gv-transition-speed, ease-in );
+
+			cursor: pointer;
+			cursor: hand;
+			
+			&:hover{
+			  background: darken( $gv-box-bg, 10% );
+			}
+			
+			& .easeImgLink{
+				display:block;
+			}
+			& .easeVideoThumb{
+				margin: 0 auto;
+				display:block;
+				@include border-radius( 2px );
+			}
+			
+			& .easeThumbTitle{
+				text-align:center;
+				@include adjust-font-size-to( 13px, 1 );
+				@include margin-leader;
+				padding-left:1em;
+				padding-right:1em;
+				cursor:pointer;
+				cursor:hand;
+				font-family: courier, monospace, sans-serif;
+			}
+			
+			& .easeDesc{
+			  display: none;
+			  //margin-left: 1em;
+			  //margin-right: 1em;
+			  //@include adjust-font-size-to( 10px );
+			}
+		}	
+	}
+	
+}
+
+#easeLoadingMask{
+	position:absolute;
+	display:block;
+	top:0;
+	left:0;
+	width:100%;
+	z-index:10000;
+	
+	@include border-radius( $gv-base-radius );
+			
+	background-image: url('../images/loading.gif');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-color: rgba(255,255,255,0.5);
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF)"; /* IE8 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF);   /* IE6 & 7 */
+    zoom: 1;
+}
+
+
+img.easeVideoThumb {
+}
+
+.easeDesc{
+	//margin: 10px 0;
+	//font-size: 0.9em;
+	//line-height: 1.5em;
+	@include margin-leader;
+	@include margin-trailer;	
+	@include adjust-font-size-to( 12px );
+}
+#easePagin{
+	display: block;
+	width:100%;
+	text-align:center;
+	//line-height:2em;
+	@include adjust-font-size-to( 12px );
+	
+	@include padding-leader(1);
+	@include padding-trailer(1);
+	//padding: 1em 0;
+		
+	min-height: 50px;
+}
+#easePagin .next, #easePagin .prev{
+	display: inline-block;
+	vertical-align: text-top;
+	cursor:pointer;
+	cursor:hand;
+	//line-height:2em;
+	//@include adjust-font-size-to( 12px );
+	@include padding-leader(0.25);
+	@include padding-trailer(0.25);
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	
+	@include theme-button(
+		//#eee,
+		//lighten( $base-bg, 5% )
+		//lighten( $base-bg, 15% ),
+		//darken( $base-bg, 10% )
+	);
+}
+#easePagin .next{
+	@include float-right;
+}
+#easePagin .prev{
+	@include float-left;
+}
+#easePagin span{
+	display:inline-block;
+	vertical-align: text-top;
+	//@include margin-leader(0.25);
+	@include adjust-font-size-to(12px, 1.75);
+}
+
+
+#easeVideoPlayer, #easeClose{
+	position: absolute !important;
+	//position: fixed !important;
+	left: -10000px;
+	//z-index: 100000;
+	//@include single-transition( 'all', $base-speed/2, 'ease-in-out' );
+}
+#easeVideoPlayer{
+	z-index:1000;
+}
+#easeClose{
+	z-index:1001;
+	cursor:pointer;
+	color: #fefefe;
+	font-size:1.5em;
+	line-height:1.8em;
+	padding:0.4em 1em;
+	
+	@include background( rgba(0,0,0,0.5) );
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000)"; /* IE8 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000);   /* IE6 & 7 */	
+    zoom: 1;
+
+	&:hover{
+	    text-decoration: underline;	
+		@include background( rgba(0,0,0,0.7) );
+		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2000000,endColorstr=#B2000000)"; /* IE8 */
+	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2000000,endColorstr=#B2000000);   /* IE6 & 7 */
+	}
+	&:active{
+	@include background( rgba(0,0,0,0.6) );
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000)"; /* IE8 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);   /* IE6 & 7 */
+	}
+}
+
+.easePlay{
+	display:none;
+}

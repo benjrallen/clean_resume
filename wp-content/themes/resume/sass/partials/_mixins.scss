@@ -1,0 +1,208 @@
+
+@mixin main-sprite{
+	//background-image:url("../images/main-sprite-32.png");
+	background-image:url("../images/main-sprite-8.png");
+	background-repeat: no-repeat;
+}
+
+@mixin mobile-sprite{
+	background-image:url("../images/mobile-sprite-32.png");
+	//background-image:url("../images/mobile-sprite-8.png");
+	background-repeat: no-repeat;
+}
+
+
+@mixin hover-opacity{
+	&:hover{
+		@include opacity(0.7);
+	}
+	&:active{
+		@include opacity(0.85);
+	}
+}
+
+@mixin theme-button( $color: $base-button-color, $contrast: $base-button-contrast ){
+	font-family: sans-serif;
+	color:#fff;
+	border:1px solid darken( $contrast, 15% );
+	@include pie;
+	@include border-radius( 2px );
+	background: lighten( $color, 10% );
+	//@include background( linear-gradient(bottom, lighten($color, 10%) 0%, lighten($color, 0%) 4%, lighten($color, 10%) 100% ) );
+	//-pie-background: linear-gradient(bottom, lighten($color, 10%) 0%, lighten($color, 0%) 4%, lighten($color, 10%) 100% );
+	@include background( linear-gradient(bottom, lighten($color, 0%) 0%, lighten($color, 10%) 96%, lighten($color, 5%) 100% ) );
+	-pie-background: linear-gradient(bottom, lighten($color, 0%) 0%, lighten($color, 10%) 96%, lighten($color, 5%) 100% );
+
+	
+	&:hover{
+		background:lighten($color, 5%);
+		color: #fff;
+	}
+	&:visited{
+		color: #fff;	
+	}
+	&:active, &.active, &.pressed{
+		@include background( linear-gradient(top, lighten($color, 10%) 0%, lighten($color, 0%) 4%, lighten($color, 10%) 100% ) );
+		-pie-background: linear-gradient(top, lighten($color, 10%) 0%, lighten($color, 0%) 4%, lighten($color, 10%) 100% );
+	}
+	&.loading{
+		background:lighten($color, 20%);
+	}
+	
+}
+
+
+
+@mixin theme-button-gradient{
+	@include pie;
+	@include background-image(
+				linear-gradient(
+					top,
+					$base-button-color 0%,
+					darken( $base-button-color, 8% ) 100%
+				)
+	);
+	-pie-background: linear-gradient(
+					top,
+					$base-button-color 0%,
+					darken( $base-button-color, 8% ) 100%
+	);
+	@include single-box-shadow(
+				lighten( $base-button-color, 5% ), //$color,
+				0, //$hoff,
+				0, //$voff,
+				6px, //$blur,
+				4px, //$spread,
+				true //$inset
+	);
+}
+
+//come back
+@mixin theme-hard-grad-button{
+	@include pie;
+
+	background: $base-button-color;
+	
+	border: 1px solid transparent;
+	color: #fff;
+	
+	@include background-image(
+				linear-gradient(
+					top,
+					lighten($base-button-color, 10%) 50%,
+					$base-button-color 51%
+				)
+	);
+	-pie-background: linear-gradient(
+					top,
+					lighten($base-button-color, 10%) 50%,
+					$base-button-color 51%
+	);
+	
+}
+
+@mixin theme-hard-grad-button-hover{
+	&:hover{
+		@include background-image(
+					linear-gradient(
+						top,
+						lighten($base-button-color, 10%),
+						$base-button-color
+					)
+		);
+		-pie-background: linear-gradient(
+						top,
+						lighten($base-button-color, 10%),
+						$base-button-color
+		);
+	}
+	&:active{
+		@include background-image(
+					linear-gradient(
+						bottom,
+						lighten($base-button-color, 10%),
+						$base-button-color
+					)
+		);
+		-pie-background: linear-gradient(
+						bottom,
+						lighten($base-button-color, 10%),
+						$base-button-color
+		);
+	}
+	
+}
+
+//google font mixins
+//<link href='http://fonts.googleapis.com/css?family=Bowlby+One|Cuprum' rel='stylesheet' type='text/css'>
+@mixin bowlby{
+	font-family: 'Bowlby One', Helvetica, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@mixin cuprum{
+	font-family: 'Cuprum', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+//<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600,300,700' rel='stylesheet' type='text/css'>
+@mixin open-sans{
+	font-family: 'Open Sans', sans-serif;	
+}
+@mixin sans-serif{
+	@include open-sans;
+}
+
+//FONT STACKS
+//<link href='http://fonts.googleapis.com/css?family=Raleway:100|Crimson+Text:400,400italic,600,600italic' rel='stylesheet' type='text/css'>
+//font-family: 'Raleway', cursive;
+//font-family: 'Crimson Text', serif;
+
+@mixin raleway{
+	//font-family: 'Raleway', cursive;
+	font-family: 'Raleway', "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+@mixin crimson{
+	font-family: 'Crimson Text', georgia, times, serif;
+}
+
+@mixin serif{
+	//font-family: georgia, times, serif;
+	@include crimson;
+}
+
+@mixin sans-serif{
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+@mixin body-font{
+	font-family: palatino, times, georgia, baskerville, serif;
+	@include crimson;
+}
+
+
+@mixin lighten-grad( $dir, $color: $base-button-color ){
+	@include background(
+		linear-gradient(
+			$dir,
+			lighten( $color, 20% ) 0%,
+			lighten( $color, 10% ) 25%,
+			lighten( $color, 10% ) 75%,
+			lighten( $color, 20% ) 100%
+		)
+	);
+}
+@mixin alpha-lighten-grad( $dir ){
+	@include background(
+		linear-gradient(
+			$dir,
+			rgba( 255,255,255, 0.3 ) 0%,
+			rgba( 255,255,255, 0.1 ) 25%,
+			rgba( 255,255,255, 0.1 ) 75%,
+			rgba( 255,255,255, 0.3 ) 100%
+		)
+	);
+-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#4CFFFFFF,endColorstr=#19FFFFFF)"; /* IE8 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4CFFFFFF,endColorstr=#19FFFFFF);   /* IE6 & 7 */
+      zoom: 1;
+}
+

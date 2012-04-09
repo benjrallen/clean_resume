@@ -1,0 +1,109 @@
+//
+// CSS for the specific theme body
+//
+
+.home #content{
+	padding-top: $home-header-height + 18px;
+	
+}
+
+#content{
+	//@include pie;
+	
+	padding-top: $header-height + 18px;
+
+/*
+	& #contentTop{
+		padding-top: $header-height;
+		//min-height:400px;
+		//background: #bad;
+		@include pie;		
+		@include margin-trailer(2);
+		border-bottom: 1px solid $box-bg;
+
+		@include background( linear-gradient(
+			top,
+			$base-bg 0%,
+			$base-bg 80px,
+			//#ccc 98%,
+			darken($base-grey, 20%) 95%,
+			darken($base-grey, 25%) 100%
+		));
+
+
+		@include box-shadow(
+			darken($base-grey, 30%) 0 0px 36px 0
+//			inset darken($base-grey, 30%) 0 -36px 36px -36px
+
+		);
+
+
+		& .bgNoise{
+			position: absolute;
+		}
+
+		&.fp{
+			padding-top: $header-height + 24px;
+			padding-bottom: 24px;
+
+		}
+
+		&.partners-rotate{
+			& .entry-title{
+				height: 0px;
+				text-indent: -9999em;
+			}
+
+			& #partnerBannerFlag{
+				height: 40px;
+				width: 157px;
+				display: block;
+				@include main-sprite;
+				background-position: 0 -502px;
+				text-indent: -9999em;
+				position: absolute;
+				top: 7px;
+				left: -9px;
+				z-index: 10000;
+				//&:hover{
+				//	background-position: 0 -542px;
+				//}
+			}
+		}
+		&.page{
+			padding-top: $header-height;
+
+			@include background( linear-gradient(
+				top,
+				$base-bg 0%,
+				$base-bg 80px,
+				//#ccc 98%,
+				darken($base-grey, 5%) 95%,
+				darken($base-grey, 10%) 100%
+			));
+
+			& .entry-title{
+				//@include padding-leader(0.5);
+				//@include padding-trailer(0.25);
+				@include padding-leader(0.45);
+				@include padding-trailer(0.2);
+				color: lighten( $base-color, 30% );
+				text-align: center;
+				font-weight: normal;
+				text-transform: uppercase;
+				letter-spacing: 18px;
+				@include adjust-font-size-to( 58px );
+
+				@include single-text-shadow( $base-color, -1px, -1px, 1px );
+			}
+
+		}
+	}
+*/
+		
+	//@include box-shadow( 
+	//	darken( $base-bg, 50% ) 0 20px 25px -20px, 
+	//	darken( $base-bg, 50% ) -10px 0 35px -30px,
+	//	darken( $base-bg, 50% ) 10px 0 35px -30px
+	//);
+}

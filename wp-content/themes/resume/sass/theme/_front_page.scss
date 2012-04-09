@@ -1,0 +1,136 @@
+article#about.hentry{	
+	position: relative;
+	//border-bottom: 1px solid lighten( $base-grey, 40% );
+	
+	@include background(
+		linear-gradient( color-stops(#ccc, #fefefe) )
+	);
+
+	@include pie;
+
+	& .mask{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: url('../images/dot_bg.png');
+		z-index: 0;
+	}
+
+	& .wrap{
+		position: relative;
+		z-index: 1;
+		@include padding-leader(2);
+		@include padding-trailer(2);
+	}
+	
+	& h2.page-title{
+		@include adjust-font-size-to( 76px );
+		font-weight: 100;
+		//color: $base-grey;
+	
+		& strong{
+			color: $base-blue;
+			cursor: pointer;
+			cursor: hand;
+			//font-weight: 400;
+			
+			&:hover{
+				color: darken( $base-blue, 20% );
+			}
+		}
+		@include padding-trailer(0.5);
+	}
+	
+	& .pic{
+		//@include float-right;
+		background: white;
+		padding: 0.5em;
+		@include border-radius( 0.25em );
+		@include box-shadow( $base-black 0 3px 12px -3px );
+		@include pie;
+		min-height: 213px;
+		
+		//padding-left: 0.5em;
+		//padding-right: 0.5em;
+		//@include padding-leader(0.25);
+		//@include padding-trailer(0.25);
+
+		& img{
+			display: block;
+			max-width: 100%;
+			height: auto;
+		}
+	}
+	
+	& .entry-content{
+		//font-weight: 600;
+				
+		& p{
+			@include crimson;
+			@include adjust-font-size-to( 18px, 1.5 );
+			color: darken( $base-grey, 10% );
+
+			//@include column-count(2);
+			//@include column-gap( 30px );
+			//orphans: 4;
+			//text-align: justify;
+			//hyphenate: auto;
+			//hyphenate-before: 2;
+			//hyphenate-after: 3;
+			//hyphenate-lines: 3;
+
+		}
+	}
+	
+	.contact{
+		
+		&.btn-large{
+			@include margin-leader(0.5);
+			@include adjust-font-size-to( 24px, 1.75 );
+			display: block;
+			@include raleway;
+			letter-spacing: 2px;
+		}
+	}
+	
+	& #fpMenu{
+		@include margin-leader(0.5);
+		& .well{
+			@include padding-leader(0.5);
+			@include padding-trailer(0.5);
+		}
+	}
+
+}
+
+
+$work-color: lighten( $base-grey, 30% );
+
+section{
+	& .section-header{
+	
+		& .divider{
+			@include margin-leader(0.5);
+			@include margin-trailer(0.75);
+		
+			@include raleway;
+			font-weight: 100;
+			letter-spacing: 2px;
+			color: $base-grey;
+			@include adjust-font-size-to( 36px );
+			border-top: 1px solid $work-color;
+			//border-top: none;
+			//border-right: none;
+			//padding-left: 0.5em;
+			
+			& span{
+				@include adjust-font-size-to( 14px );
+				@include inline-block;
+				float: left;
+				padding-right: 0.5em;
+				background: $base-white;
+				@include margin-leader( -0.5 );
+			}
+		}
+	}
+}

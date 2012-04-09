@@ -1,0 +1,373 @@
+//
+// CSS for the specific theme page / post styles
+//
+
+
+/** Default Page Template **/
+
+$art-padd: 35px;
+
+article.hentry{
+	
+	padding-left: $art-padd;
+	padding-right: $art-padd;
+	@include padding-trailer( 2 );
+	@include margin-trailer;
+	
+	position: relative;
+
+	& header{
+		border-bottom: 1px solid $base-grey;
+		@include margin-trailer(1);
+	}
+
+	& .sep, & .subtitle{
+		font-weight: 400;
+		//display: inline-block;
+		//vertical-align: middle;
+		@include inline-block;
+	}
+	& .page-title{
+		font-weight: 400;
+		@include adjust-font-size-to( 28px );
+	}
+	& .sep{
+		@include opacity( 0.6 );
+	}
+	& .subtitle{
+		@include adjust-font-size-to( 16px );
+		color: lighten( $base-color, 40% );
+		//font-style: italic;
+		letter-spacing: 2px;
+	}
+	
+	.entry-content{
+		
+		@include adjust-font-size-to( 14px, 1.25 );
+		//position: relative;
+		
+		
+		//.pic{
+		//	//display:inline;
+		//	@include float-right;
+		//	@include margin-leader(0.5);
+		//	margin-left: 1em;
+		//	margin-bottom: 0.5em;
+		//	
+		//	& img{
+		//		display:block;
+		//		@include pie;
+		//		@include border-radius(2px);
+		//		//padding: 3px;
+		//		//background: $box-bg;
+		//		@include single-box-shadow( darken( $box-bg, 50% ), 0, 8px,6px, -5px );
+		//	}
+		//}
+
+		& h1, & h2, & h3, & h4, & h5, & h6{
+			//color: darken( $base-button-color, 5% );
+		}
+
+		& h2{
+			//text-transform: uppercase;
+			@include adjust-font-size-to( 19px );
+			letter-spacing: 1px;
+			
+			& span{
+				display: block;
+				font-weight: normal;
+				@include adjust-font-size-to( 8px );
+				@include margin-leader( -0.75 );
+				text-transform: none;
+				letter-spacing: 1.5px;
+			}
+		}
+		
+		& h3{
+			
+		}
+		
+		& .entry-full{
+			display: none;
+		}
+		
+	}
+	
+}
+
+#locations{
+	
+	& p{
+		@include adjust-font-size-to( 18px );
+		@include padding-trailer(0.25);
+	}
+
+	& #gmapCont{
+		width: 70%;
+		@include float-left;
+		display: block;
+		margin-right: 2em;
+	}
+	
+	& .locationList{
+		//width: 20%;
+		display: block;
+		list-style: none outside;
+		& .locationItem{
+			//background: #bad;
+			@include padding-leader(0.25);
+			@include padding-trailer(0.25);
+			//@include margin-trailer(0.25);
+			cursor: pointer;
+			cursor: hand;
+			padding-left: 1em;
+			padding-right: 1em;
+			@include border-radius( 0 0 4px 4px );
+			border-top: 1px solid darken( $font-color, 30% );
+			
+			&:hover{
+				background: darken( $base-bg, 5% );
+			}
+		}
+		
+		& .locationName{
+			@include adjust-font-size-to( 16px );
+			color: lighten( $base-button-color, 15% );
+		}
+		
+		& .locationDuration{
+			display: none;
+		}
+		
+	}
+	
+	& .mapInfoDom{
+		text-align: center;
+		@include adjust-font-size-to( 16px );
+		& .locationName{
+			display: block;
+			color: $base-bg;
+		}
+		& .locationDuration{
+			display: block;
+			color: $base-bg;
+		}
+	}
+}
+
+.page-template-page-portfolio-php{
+	& #header{
+		position: fixed;
+		@include margin-trailer(0);
+		z-index: 11;
+	}
+	
+}
+
+body.page-template-page-videos-php{
+	//display: none;
+	
+	& #content{
+		position: static;
+	}
+}
+
+article.hentry#videos{
+	& .subtitle{
+		color: $base-color;
+		
+		&.small{
+			@include adjust-font-size-to(11px);
+		}
+	}
+	
+	& div.wrap{
+		//position: relative;
+	}
+		
+	& .entry-content{
+		width: 45%;
+		@include float-right;
+		//display: inline-block;
+		@include inline-block;
+		//@include padding-leader(2);
+		@include adjust-font-size-to( 20px );
+	}
+	
+	& #videoBlocks{
+		@include float-left;
+		//display: inline-block;
+		@include inline-block;
+		vertical-align: top;
+		width: 50%;
+	}
+	& .easeVideos{
+		min-height: 335px;
+	}
+	& #easePagin{
+		@include adjust-font-size-to( 16px, 1.5 );
+		@include padding-leader(0);
+	}
+	
+	
+}
+
+article.hentry#worksTop{
+	@include margin-leader( -1 );
+	@include padding-leader(1);
+	@include padding-trailer(0);
+	
+	position: fixed;
+	z-index: 10;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+
+	& .subtitle{
+		color: $base-color;
+		
+		&.small{
+			@include adjust-font-size-to(11px);
+		}
+	}
+	& .wrap{
+		position: relative;
+		z-index: 2;
+	}
+	
+	& header{
+		margin-bottom: 0;
+		border-bottom: none;
+	}
+	
+	& div.wrap{
+		//background: #bad;
+		@include padding-leader(0.5);
+		border-top: 1px solid $base-grey;
+		border-bottom: 1px solid $base-grey;
+	}
+	& .bttn{
+		padding-left: 1em;
+		padding-right: 1em;
+		@include inline-block;
+		margin-right: 0.5em;
+		@include adjust-font-size-to( 14px, 1.5 );
+		@include margin-trailer(0.5);
+	}
+}
+
+
+#works{
+	@include margin-leader(7.9);
+	position: relative;
+	
+	& article{
+		@include open-sans;
+		border-bottom: 1px solid $base-grey;
+		@include padding-leader;
+		@include padding-trailer(2);
+		text-align: right;
+
+		& .left{
+			//display: inline-block;
+			//@include inline-block;
+			@include float-left;
+			width: 314px;
+			text-align: left;
+		}
+
+		& header, & .pics{
+		}
+		& header{
+			padding-right: 2em;
+			
+			& .post-title{
+				display: inline;
+				margin-right: 1em;
+				font-weight: 400;
+				@include adjust-font-size-to( 22px );
+				font-variant: small-caps;
+			}
+			& .work-link{
+				
+			}
+			
+			@include margin-trailer(0.75);
+		}
+		
+		& .entry{
+			padding-right: 2.5em;
+		}
+		
+		& .pics{
+			@include padding-leader(0.5);
+			
+			& img{
+				//max-width: 125px;
+				//height: auto;
+				max-width: 100px;
+				width: auto;
+				max-height: 125px;
+				width: auto;
+				border: 3px solid lighten( $base-bg, 20% );
+				//@include float-left;
+				//display: block;
+				@include inline-block;
+				vertical-align: top;
+				@include border-radius( 3px );
+				margin-right: 1em;
+				@include margin-trailer;
+				
+				&.active, &:hover{
+					border: 3px solid $base-button-color;
+				}
+			}
+			
+		}
+		
+		& .big-pic{
+			//@include float-right;
+//			display: inline-block;
+			@include inline-block;
+			vertical-align: top;
+			width: 640px;
+			
+			& img{
+				display: block;
+				max-width: 638px;
+				margin-left: auto;
+				margin-right: auto;
+				height: auto;
+				border: 1px solid $base-grey;
+				@include border-radius( 3px );
+			}
+			
+		}
+	}
+	
+}
+
+.more-link{
+	display: block;
+	height: 25px;
+	width: 225px;
+	@include main-sprite;
+	background-position: 0 -157px;
+	text-indent: -9999em;
+	
+	&:hover{
+		background-position: 0 -221px;
+	}
+
+	@include single-transition( none );
+
+}
+
+
+/** End Default Page Template **/
+
+
+/** 404 Page Template **/
+a.home-link{ display:block; @include float-right; color: $base-color; }
+/** End 404 Page Template **/
+

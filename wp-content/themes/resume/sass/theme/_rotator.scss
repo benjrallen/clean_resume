@@ -1,0 +1,167 @@
+//
+// CSS for the specific theme rotator
+//
+
+/** Rotator **/
+
+@mixin description-grad{
+	background: rgba(0,0,0,0.4);
+
+	@include background(
+		linear-gradient(
+			left,
+			rgba(0,0,0,0.4) 80%,
+			rgba(0,0,0,0.0) 100%
+		)
+	);
+
+	@include pie;
+	-pie-background: rgba(0,0,0,0.4); 
+}
+
+
+#rotator{
+	display:block;
+	height:305px;
+	width: 960px;
+	//margin-left: 2em;
+
+	//position:relative;
+	@include pie;
+	
+	@include box-shadow(
+		darken($base-grey, 70%) 0 0 30px -6px,
+		darken($base-grey, 70%) 0 24px 24px -18px
+	);
+	
+	//@include float-left;
+		
+	& .slides{
+		display:inline-block;
+		width:950px;
+		height:299px;
+		padding: 3px 5px;
+		overflow:hidden;
+		position:relative;
+		//@include float-left;
+		background: $box-bg;
+		@include box-shadow( darken($base-grey, 0%) 0 0 12px 0px inset );
+		
+		& .slide{
+			display:block;
+			width: 938px;
+			height: 285px;
+			padding: 5px;
+			border: 1px solid darken($base-grey, 10%);
+			//background: $box-bg;
+			
+			position:absolute;
+			top: 4px;
+			left: 5px;
+			z-index:1;
+			
+			& img{
+				display:block;
+				position:absolute;
+				bottom: 5px;
+				left: 5px;
+			}
+			
+			& .description{
+				display: none;
+				
+				//@include description-grad;
+				//color: lighten( $base-color, 70% );
+				//display:block;
+				//position:absolute;
+				//bottom: 0;
+				//left: 0;
+				//padding: 6px 12px;
+				//width: 66%;
+				//@include adjust-font-size-to( 14px );
+						
+				//& span{
+				//	//width: 50%;
+				//	@include single-text-shadow( darken( $base-bg, 75% ), -1px, 1px, 1px );
+				//}
+				//& .title{
+				//	@include float-left;
+				//	@include bowlby;
+				//	@include adjust-font-size-to( 32px );
+				//	text-align: right;
+				//	width: 46%;
+				//	padding-right:2%;
+				//	margin-right:2%;
+				//	border-right: 6px solid lighten( $base-color, 70% );
+				//}
+				//& .caption{
+				//	width: 48%;
+				//	display: block;
+				//	@include float-left;
+				//	@include adjust-font-size-to( 22px, 1.5 );
+				//}
+			}
+		}
+	}
+}
+
+$ctrl-border-width: 1px;
+$ctrl-margin: 4px;
+
+.controls{
+	@include inline-block;
+	@include margin-trailer(0.75);
+	margin-right:1.25em;
+	position:absolute;
+	bottom:0;
+	right:0;
+	z-index:999999;
+	
+	& div{
+		//color: $base-button-color;
+		//@include pie;
+		//@include adjust-font-size-to(12px);
+		//font-size: 12px;
+		//line-height: 18px;
+		//text-align: center;
+
+		background: $box-bg;
+		border: $ctrl-border-width solid darken( $base-button-color, 6% );
+		@include float-left;
+		display: block;
+		margin-left: $ctrl-margin;
+		width: 14px;
+		height: 14px;
+		@include border-radius( 2px );
+
+		background: $base-button-color;
+		@include single-box-shadow( darken( $base-button-color, 6% ), 0, 0, 5px, 2px, true);
+
+		
+		text-indent: -9999em;
+		
+		cursor: default;
+		
+		&:hover{
+			border: $ctrl-border-width solid darken( $base-button-color, 11% );
+			//color: darken( $base-button-color, 15% );
+			//background: darken( $box-bg, 15% );
+			background: darken($base-button-color, 5%);
+			@include single-box-shadow( darken( $base-button-color, 11% ), 0, 0, 5px, 2px, true);
+			
+		}
+		&.active{
+			border: $ctrl-border-width solid darken($base-grey, 46%);
+			//color: darken($base-grey, 50%);
+			background: darken($base-grey, 40%);
+			@include single-box-shadow( darken( $base-grey, 46% ), 0, 0, 5px, 2px, true);
+		}
+	}
+}
+
+.lte8 .controls span{
+	height:22px !important;
+}
+
+/** End Rotator **/
+

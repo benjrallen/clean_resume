@@ -1,0 +1,54 @@
+section#work{
+	//background: url('../images/grid-header.png') bottom left repeat-x;
+	//@include box-shadow( $base-grey 0 -12px 24px -16px inset);
+
+	$mapBg: $grayLighter;
+	background: $mapBg;
+	@include padding-leader(1.5);
+
+	& .section-header{		
+		@include adjust-font-size-to( 20px );
+
+		& .divider{
+			
+			& span{
+				background: $mapBg;
+			}
+		}
+
+	}
+	
+	& article{
+		@include padding-trailer(4);
+	}
+
+	& .post-title{
+		//@include raleway;
+		//color: lighten( $base-grey, 0% );
+		@include sans-serif;
+		text-transform: uppercase;
+		letter-spacing: 3px;
+		font-weight: 300;
+		@include padding-trailer( 0.25 );
+		//@include margin-trailer( 0.25 );
+		border-bottom: 1px solid $work-color;
+	}
+	& .work-link{
+		@include adjust-font-size-to(16px);
+		font-weight: 100;
+		letter-spacing: 1px;
+		border-bottom: 1px solid $work-color;
+		@include padding-leader( 0.125 );
+		@include padding-trailer( 0.2 );
+		@include margin-trailer( 0.75 );
+		display: block;
+	}
+	
+	& .terms{
+		
+		& button{
+			@include margin-trailer(0.25);
+			margin-right: 0.25em;
+		}
+	}
+}

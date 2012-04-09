@@ -1,0 +1,355 @@
+//
+// CSS for the specific theme header
+//
+$triW: 6px;
+
+.home{
+	
+	& #header{
+		height: $home-header-height;
+		//padding-bottom: 18px;
+		//background: url('../images/header-shadow-32.png') no-repeat center bottom;
+		min-width: $base-width;
+		display: block;
+
+
+
+
+		& h1, & h2{
+			height: $home-header-height + $triW;
+			width: 94px;
+		}
+
+		& nav{
+			height: auto;
+			& div{
+				border-bottom: 1px solid darken( $base-grey, 50% );
+				display: block;
+				//@include padding-leader( 1.75 );
+				height: auto;
+			}
+		}
+
+
+		&#accessLeft{
+			& div{
+				//margin-right: 8.25em;
+				@include single-box-shadow( $nav-shadow, -10px, 0, 18px, -6px );
+			}
+		}
+		&#accessRight{
+			& div{
+				//margin-left: 8.25em;
+				@include single-box-shadow( $nav-shadow, 10px, 0, 18px, -6px );
+			}
+		}
+		
+		& .menu{
+			//@include inline-block-list;
+			border-bottom: 1px solid $base-grey;
+			height: auto;
+			
+			& li{
+				//@include single-transition( all, $base-transition-time, ease-in-out );
+				@include padding-leader( 1 );
+
+				&.menu-item-last{
+	
+				}
+				
+				&:hover{
+					
+				}
+				
+				& a{
+					//text-decoration:none;
+					//color: $nav-link-color;
+					//padding-left: 0.5em;
+					//padding-right: 0.5em;
+					display: inline;
+					@include adjust-font-size-to(12px, 0.5);
+					
+					&:hover, &:active{
+						//background: none;
+						//color: darken( $base-button-color, 0% );
+					}
+				}
+				
+				&.current_page_item{
+					background: none;
+					
+					& a{
+						color: darken( $base-button-color, 0% );
+						
+					}
+					&:hover{
+						background: lighten( $base-button-color, 15% );
+						
+						& a{
+							color: $base-bg;
+						}
+					}
+
+				}
+	
+			}
+		}
+		
+
+	}
+}
+
+#header{
+	width: 100%;
+	position: absolute;
+	top: 0;
+	z-index: 10;
+	height: $header-height;
+	//padding-bottom: 18px;
+	//background: url('../images/header-shadow-32.png') no-repeat center bottom;
+	min-width: $base-width;
+	display: block;
+	border-bottom: 1px solid lighten( $base-bg, 10% );
+	
+	
+	& #glowWrap{
+		width: 100%;
+		position: absolute;
+		bottom: -18px;
+		left: 0;
+		height: 18px;
+		overflow:hidden;
+		display: none;
+		
+		& #headerGlow{
+			//width: $base-width;
+			height: 100%;
+			position: relative;
+			
+			$glowW: 1234px;
+			& div{
+				height: 100%;
+				width: $glowW;
+				position: absolute;
+				top: 0;
+				left: ($base-width - $glowW)/2;
+				margin-left: auto;
+				margin-right: auto;
+				background: url('../images/header-shadow-32.png') no-repeat center bottom;
+			
+			}
+		
+		}
+	}
+	
+	@include serif;
+	
+	
+	& h1, & h2{
+		position: relative;
+		//width: 100%;
+		top: 0;
+		left: 0;
+		height: $header-height + $triW;
+		width: 76px;
+		display: block;
+		z-index: 2;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	& a#logo{
+		display: block;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		position: relative;
+		@include single-transition( background, $base-transition-time, ease-in-out );
+		
+		&:hover{
+			& div.front{
+				background: darken( $base-button-color, 20% );
+			}
+		}
+		
+		& div{
+			position: absolute;
+			
+			&.front{
+				height: 100%;
+				width: 100%;
+				top: 0;
+				left: 0;
+				z-index: 1;
+				background: $base-button-color;
+				@include single-box-shadow( darken( $base-button-color, 15% ), 0, 0, 13px, 2px, true);
+			}
+			
+						
+			&.tri{
+				//display: none;
+				//height: 6px;
+				//width: 105px;
+				//bottom: 0;
+				//left: -4px;
+				//z-index: 0;
+				//@include main-sprite;
+				//background-position: 0 0;
+				
+				position: absolute;
+				bottom: 0;
+				border: $triW/2 solid lighten( $base-button-color, 25% );
+				border-bottom: $triW/2 solid transparent;
+				height: 0;
+				widht: 0;
+				
+				&.left{
+					border-left: $triW/2 solid transparent;
+					left: -$triW;
+				}
+				&.right{
+					border-right: $triW/2 solid transparent;
+					right: -$triW;
+					display: none;
+				}
+			}
+		}
+		
+		& span{
+			//display: inline-block;
+			@include inline-block;
+			vertical-align: middle;
+		}
+		& .line{
+			width: 1px;
+			margin-left: -1px;
+			height: 100%;
+		}
+		& .logoName{
+			height: 25px;
+			width: 50px;
+			@include main-sprite;
+			background-position: 0 0;
+			text-indent: -9999em;
+		}
+	}
+	
+	& nav{
+		//display:inline-block;
+		cursor: default;
+		width: 50%;
+		position: absolute;
+		top: 0;
+		z-index: 2;
+		text-transform: uppercase;
+		
+		//height: 100%;
+		height: $header-height;
+		
+		& .line{
+			//display: inline-block;
+			@include inline-block;
+			vertical-align: middle;
+			height: 100%;
+			width: 1px;
+			margin-left: -1px;
+			display: none;
+		}
+		
+		& div{
+			//@include padding-leader( 0 );
+			//border-bottom: 1px solid lighten( $base-grey, 50% );
+			
+			//width: 99%;
+			//display: inline-block;
+			//vertical-align: middle;
+			@include padding-leader( 0 );
+			//border-bottom: 1px solid lighten( $base-grey, 50% );
+			height: $header-height;
+			//width: 99%;
+			//display: inline-block;
+			//vertical-align: middle;
+		}
+		
+		
+		&#accessLeft{
+			@include float-left;
+			text-align: right;
+			left: 0;
+			
+			& div{
+				margin-right: 8.25em;
+				@include single-box-shadow( $nav-shadow, -10px, 0, 18px, -6px );
+			}
+		}
+		&#accessRight{
+			@include float-right;
+			text-align: left;
+			right: 0;
+			
+			& div{
+				margin-left: 8.25em;
+				@include single-box-shadow( $nav-shadow, 10px, 0, 18px, -6px );
+			}
+		}
+		
+		& .menu{
+			@include inline-block-list;
+			//border-bottom: 1px solid $base-grey;
+			@include adjust-font-size-to(16px);
+			
+			height: $header-height;
+			
+			& li{
+				@include single-transition( background, $base-transition-time, ease-in-out );
+											
+				&.menu-item-last{
+	
+				}
+				
+				&:hover{
+					background: lighten( $base-button-color, 15% );
+					
+					& a{
+						color: $base-bg;
+					}
+				}
+				
+				& a{
+					text-decoration:none;
+					color: $nav-link-color;
+					padding-left: 0.5em;
+					padding-right: 0.5em;
+					
+					line-height: $header-height;
+					height: $header-height;
+					display: block;
+					
+					&:hover, &:active{
+						//color: darken( $base-button-color, 20% );
+					}
+				}
+				
+				&.current_page_item{
+					background: darken($base-button-color, 10%);
+					& a{
+						//color: darken( $base-button-color, 20% );
+						color: $base-color;
+						
+						&:hover{
+						}
+					}
+				}
+	
+			}
+		}
+		
+	
+	}
+	
+	
+	
+}
+
+
+

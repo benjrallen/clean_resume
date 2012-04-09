@@ -1,0 +1,68 @@
+//
+// CSS for the contact form 7 inputs
+//
+
+$textarea-height: 180px;
+
+/** Contact Form 7 Markup and Style **/
+#contact{
+	background: $grayLight;
+	@include padding-leader( 1.25 );
+	
+	& h2{
+		@include padding-trailer(0.5);
+	}
+	
+	& p{
+		margin:0;
+		padding:0;
+		position: relative;
+		display: block;
+	}
+	
+	& input, & textarea{
+		display: block;
+	}
+	
+	& textarea{
+		width: 96%;
+		padding-left: 2%;
+		padding-right: 2%;
+		height: 10.25em;
+		@include padding-leader(0.25);
+		@include padding-trailer(0.25);
+		@include adjust-font-size-to( 16px,1.25 );
+	}
+
+	& input[type="text"]{
+		width: 92%;
+		padding-left: 4%;
+		padding-right: 4%;
+	}	
+
+	& input[type="text"], & textarea{
+		background: $gray;
+		color: $base-white;
+		border: 1px solid transparent;
+		
+		&:focus{
+			background: $grayLighter;
+			color: $base-black;
+			
+			@include single-transition( background, 0.1s, ease-in-out );
+		}
+	}
+	
+	& input{
+
+		@include adjust-font-size-to( 16px );
+		height: 2.25em;
+		
+		&[type="submit"]{
+			width: 101%;
+			height: 4.25em;
+		}
+	}
+}
+
+/** End Contact Form 7 Markup and Style **/
