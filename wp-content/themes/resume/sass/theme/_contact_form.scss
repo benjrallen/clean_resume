@@ -3,6 +3,7 @@
 //
 
 $textarea-height: 180px;
+$inpH: 47px;
 
 /** Contact Form 7 Markup and Style **/
 #contact{
@@ -16,15 +17,88 @@ $textarea-height: 180px;
 	& p{
 		margin:0;
 		padding:0;
-		position: relative;
+		display: block;
+		
+	}
+
+	& span.wpcf7-form-control-wrap{
 		display: block;
 	}
+
+	& span.wpcf7-not-valid-tip, & div.wpcf7-response-output{
+		@include adjust-font-size-to(16px);
+		display: block;
+		color: $base-white;
+		@include border-radius( 3px );
+		@include pie;
+		position: absolute;
+	}
+
+	& span.wpcf7-not-valid-tip{
+		height: 96%;
+		width: 94%;
+		padding: 0 3%;
+		top: 0;
+		left: 0;
+		//border: 1px solid #c66;
+		//background: #c99;
+		border: 1px solid $red;
+		background: lighten( desaturate( $red, 30% ), 10%);
+		line-height: $inpH;
+		height: $inpH;
+		
+		//@include opacity(0.5);
+	}
+	
+	& div.wpcf7-response-output{
+		top: -3.75em;
+		right: 0;
+		margin: 0;
+		
+		&.wpcf7-validation-errors{
+			border: 2px solid $yellow;
+			background: lighten( desaturate( $yellow, 30% ), 10%);
+		}
+		& .wpcf7-mail-sent-ok{
+			border: 2px solid $green;
+			background: lighten( desaturate( $green, 30% ), 10%);
+		}
+	}
+	
+	& .ajax-loader{
+		position: absolute;
+		top: 0;
+		right: -2em;
+	}
+
 	
 	& input, & textarea{
 		display: block;
 	}
 	
+	& form{
+		margin-bottom: 0;
+		position: relative;
+	}
+	
+	& .meta{
+		//@include margin-trailer();
+		@include adjust-font-size-to( 16px );
+		@include sans-serif;
+		//text-transform: uppercase;
+		color: $gray;
+		
+		& a{
+			color: $gray;
+		}
+	}
+	
+	& .right{
+		text-align: right;
+	}
+	
 	& textarea{
+		margin-bottom: 0;
 		width: 96%;
 		padding-left: 2%;
 		padding-right: 2%;

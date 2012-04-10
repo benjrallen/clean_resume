@@ -15,6 +15,110 @@ try{
 }
 
 
+/**
+ * Original author Remy Sharp
+ * url http://remysharp.com/2009/01/26/element-in-view-event-plugin/
+ * this is a modified version made for Jordan Price
+ */
+(function ($) {
+	//BA - I added this because I want to work with the fixed positioning
+	var navHeight = $('#access').outerHeight();
+	
+    $.fn.menuview = function(options) {
+    	options = $.extend({
+     	    optionOne: 'defaultValue',
+            optionTwo: { partOne: 'defaultValue' }
+	}, options)};
+
+    function getViewportHeight() {
+        var height = window.innerHeight; // Safari, Opera
+        var mode = document.compatMode;
+
+        if ( (mode || !$.support.boxModel) ) { // IE, Gecko
+            height = (mode == 'CSS1Compat') ?
+            document.documentElement.clientHeight : // Standards
+            document.body.clientHeight; // Quirks
+        }
+
+        return height;
+    }
+
+    $(window).scroll(function () {
+		var outDirection = 'out';
+		var inDirection = 'in';
+		var topDirection = 'top';
+		var bottomDirection = 'bottom';
+		var vpH = getViewportHeight(),
+			scrolltop = (document.documentElement.scrollTop ?
+			    document.documentElement.scrollTop :
+			    document.body.scrollTop),
+			elems = [];
+
+		//BA = ADD THE FIXED NAV HEIGHT TO IT;
+        scrolltop = scrolltop + navHeight;
+
+
+		// naughty, but this is how it knows which elements to check for
+		$.each($.cache, function () {
+			if (this.events && this.events.menuview) {
+				if(this.events.menuview){
+					var lMainDiv = $(this.handle.elem);
+					var lAssociatedDiv = this.events.menuview[0].data["additional_div"];
+					lMainDiv.data('associated_div', lAssociatedDiv);
+		//			$(this.handle.elem).data('associated_div', this.events.menuview[0]["additional_div"]);
+				}
+				
+				elems.push(this.handle.elem);
+			}
+		});
+
+	        if (elems.length) {
+	            $(elems).each(function () {
+	                var $el = $(this),
+	                    top = $el.offset().top,
+	                    height = $el.height(),
+	                    menuview = $el.data('menuview') || false;
+					var $item = $el.data('associated_div');
+					var lDivHeight = $item.height();
+
+
+	                if (scrolltop < top || scrolltop + vpH > top + height + (vpH - lDivHeight)) {
+	                    if (menuview) {
+							var lDirection;
+							if(scrolltop + navHeight + vpH > top + height + (vpH - lDivHeight) )
+								lDirection = bottomDirection;
+							else if(scrolltop + navHeight < top){
+								lDirection = topDirection;
+						}	
+	                        $el.data('menuview', false);
+	                        $el.trigger('menuview', [ true, outDirection, lDirection ]);                        
+	                    }
+                	} else if ( scrolltop >= top - lDivHeight || 
+			     		scrolltop + vpH <= top + height
+					) {
+                    	if (!menuview) {
+			
+							var lDirection = topDirection;
+							if(scrolltop + vpH > top + height){
+								lDirection = bottomDirection;
+						}
+                        $el.data('menuview', true);
+                        $el.trigger('menuview', [ true, inDirection, lDirection ]);
+                    }
+                }
+            });
+        }
+    });
+    
+    // kick the event to pick up any elements already in view.
+    // note however, this only works if the plugin is included after the elements are bound to 'menuview'
+    $(function () {
+        $(window).trigger('scroll');
+    });
+})(jQuery);
+
+
+
 (function($){
 
 	function EaseYouTubePlayer(config){

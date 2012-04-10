@@ -26,7 +26,7 @@
 		//console.log( 'eyt', eyt );
 
 		worksPage();
-		videosPage();
+		//videosPage();
 		locationsPage();
 		replaceResumeLink();
 		subwayTiles();
@@ -143,97 +143,77 @@
 	}
 	
 	function worksPage(){
-		if( $('#worksTop').length ){
+		if( $('#work').length ) {
+			var cont = $('#work'),
+				navHeight = $('#access').outerHeight(),
+				pics = cont.find('.pics'),
+				storeStr = 'store_margin';
 			
-	        var bttns = $('#worksTop').find('a'),
-				topOff = $('#header').outerHeight() + $('#worksTop').outerHeight(),
-				works = $('#works');
-
-			//set the margin on the top in case there are too many buttons pushing down the fixed positioning.
-			works.css({ marginTop: $('#worksTop').outerHeight() - 18 });
-	
-			var bttnClick = function(e){
-				e.preventDefault();
-                
-				var href = $(this).attr('href');
-				
-				href = href.substr(1, href.length);
-                
-				var off = $('#works').find("#" + href).offset();
-                
-				$('html, body').animate({scrollTop: off.top - topOff + 'px'}, 2 * EaseTransTime);
-                
-				off = null;
-                href = null;				
-			};
-	
-	        $.each(bttns, function() {
-	            var href = $(this).attr('href');
-
-				if (href && href.indexOf("#") === 0)
-	                $(this).click( bttnClick );
-	
-	            href = null
-	        });
-
-	        bttns = null;
-
-			var thumbClick = function(e){
-				$(this).addClass('active').siblings().removeClass('active');
-				$(this).parent().parent().next().find('img').attr('src', $(this).attr('full'));
-			};
-			
-			works.find('img').click( thumbClick );
-			
-			//preload the big images
-			var pics = works.find('.pics').find('img');
-			
-			//console.log( pics );
-			
-			var preloadBigPics = function(){
-				var src = $(this).attr('full');
-				
-				var img = new Image();
-				img.src = src;
-				return;
-			};
-			
-			$.each( pics, preloadBigPics );
-			
-			pics = null;
-			works = null;
-		}
-		
-	}
-	
-/*	
-	function pageReadMore(){
-//		if ( $('.page-read-more').length ){
-//			var readMore = $('.page-read-more'),
-		if ( $('.entry-content .more-link').length ){
-			var readMore = $('.entry-content .more-link'),
-				rest = $('.entry-full');
-			
-			rest.find('span[id]').each(function(){
-				$(this).siblings('br').remove();
-				$(this).remove();
-			});	
-			
-			//readMore.append('<div class="tri"></div>').click(function(e){
-			readMore.click(function(e){
-				
-				e.preventDefault();
-				
-				$(this).fadeOut(EaseTransTime);
-				rest.slideDown(EaseTransTime * 2, function(){
-					$(window).trigger('resize');
+			var follow_scroll = function(el){
+                //var scrollTop = $(window).scrollTop(),
+				var	margin_left = parseInt( el.css('margin-left').replace('px',''), 10) || 0,
+					margin_top = parseInt( el.css('margin-top').replace('px',''), 10) || 0;
+								
+				el.data( storeStr, {
+					left: margin_left,
+					top: margin_top
 				});
 				
-				//return false;
-			});;
-		}
+				el.css({
+					position: 'fixed',
+					top: navHeight,
+					left: el.offset().left,
+					//marginTop: '1em',
+					marginLeft: 0,
+					marginTop: 0
+				});
+				
+				margin_left = null;
+				margin_right = null;
+			}
+			
+			var unfollow_scroll = function( el, reference_el, unset_top ){
+				
+				var scrollTop = $(window).scrollTop(),
+					top = ( unset_top ? 0 : reference_el.outerHeight() - el.outerHeight() ),
+					data = el.data(storeStr);
+								
+				el.css({
+					position: 'relative',
+					top: top,
+					left: 0,
+					marginLeft: data.left,
+					marginTop: data.top
+				});
+				
+				scrollTop = null;
+				data = null;
+				top = null
+			};
+			
+			var bind_it = function(i){
+				var $this = $(this),
+					menu = $(this).parent().children('.entry-box');
+				
+				//console.log( $(this), menu );
+
+				$this.bind('menuview', {additional_div: menu}, function (event, visible, inOrOut, direction) {
+					if( visible ){
+						if( inOrOut === 'in' ){
+							follow_scroll( menu );
+						} else if( direction === 'bottom' ) {
+							unfollow_scroll( menu, $this, false );
+						} else {
+							unfollow_scroll( menu, $this, true );
+						}
+					}
+				});
+			};
+
+			pics.each( bind_it );
+			
+		}		
 	}
-*/	
 	
 	//this project has a right and a left primary nav menu.
 	function autoMenu(){

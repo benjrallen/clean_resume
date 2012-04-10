@@ -9,7 +9,7 @@
 <article id="<?php echo $post->post_name; ?>" class="span12 wrap">
   <div class="row">
 
-	  <div class="pics span8">
+	  <div class="pics span9">
 	    <?php
 	      if( $imgs ){
 	        //$ct = 0;
@@ -36,7 +36,7 @@
 	    <div class="clearfix"></div>
 	  </div>
 
-    <div class="span3 offset1">
+    <div class="span3 entry-box">
   	  <header>
   	    <h2 class="post-title"><?php the_title(); ?></h2>
   	    <?php 
@@ -63,48 +63,6 @@
     </div>
 
   </div>
-  
-  <div class="left">
-
-
-	  <div class="pics">
-	    <?php
-	    /*
-	      if( $imgs ){
-	        $ct = 0;
-	        $big = false;
-	        foreach( $imgs as $img ) {
-	          $src = wp_get_attachment_image_src( $img->ID, 'project-img' );
-	          $thumb = wp_get_attachment_image_src( $img->ID, 'project-thumb' );
-	          $class = '';
-	          if ( $ct == 0 ){
-	            $big = $src;
-	            $class = 'active';
-	          }
-	          echo '<img src="'.$thumb[0].'" alt="" class="'.$class.'" full="'.$src[0].'" />';
-
-	          //print_r($src); echo '<br /><br />';
-	          $ct++;
-
-	          unset( $thumb );
-	          unset( $src );
-	        }
-	      }
-	    */
-	    ?>
-	    <div class="clearfix"></div>
-	  </div>
-    <div class="clearfix"></div>
-	</div>
-
-	<div class="big-pic">
-	  <?php
-	    if( $big ){
-        //echo '<img src="'.$big[0].'" alt="" />';
-        //unset( $big );
-	    }
-	  ?>
-	</div>
 
   <div class="clearfix"></div>
 </article>

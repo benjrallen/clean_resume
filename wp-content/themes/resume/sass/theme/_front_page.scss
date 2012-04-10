@@ -1,6 +1,11 @@
 article#about.hentry{	
 	position: relative;
 	//border-bottom: 1px solid lighten( $base-grey, 40% );
+
+	@include box-shadow( 
+		$base-grey 0 12px 24px -16px
+		//$base-grey 0 -12px 24px -16px
+	);
 	
 	@include background(
 		linear-gradient( color-stops(#ccc, #fefefe) )

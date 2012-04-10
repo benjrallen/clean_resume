@@ -100,67 +100,6 @@ get_header(); ?>
 	
 </article>
 
-<section id="contact" class="row">
-  <div class="span12 wrap">
-    <h2 class="page-title">Contact Me.</h2>
-    <div class="row">
-    <?php 
-    
-      echo do_shortcode('[contact-form 1 "Contact Me"]'); 
-    
-      /*
-       <div class="span8">
-         <p>[textarea your-message watermark "Enter your message."]</p>
-
-         <div class="row">
-           <div class="span4 left">
-             <span>Email: </span><a href="mailto:benjrallen@gmail.com">benjrallen@gmail.com</a>
-           </div>
-           <div class="span4 right">
-             <span>Call me:</span><a href="tel:415.531.8921">415.531.8921</span>
-           </div>
-         </div>
-
-       </div>
-       <div class="span4">
-         <p>[text* your-name watermark "Your Name."]</p>
-         <p>[email* your-email watermark "Your Email"]</p>
-         <p>[submit class:btn class:btn-inverse]</p>
-       </div>
-      <div class="clearfix"></div>
-      */
-      
-    ?>
-    </div>
-
-  </div>
-</section>
-
-<section id="places" class="row">
-
-  <?php echo make_section_header( 'I\'ve lived around.' ); ?>
-
-  <article class="span12 wrap">
-  
-    <div class="row">
-
-      <div class="span8 map">
-        <div  id="gMap" class="well"></div>
-      </div>
-
-      <div class="span4 list">
-        <?php echo get_location_list( 'nav navlist well', '' ); ?>
-      </div>
-
-    </div>
-		
-  </article>
-
-
-  
-</section>
-
-
 
 <section id="work" class="row">  
   <?php
@@ -185,8 +124,67 @@ get_header(); ?>
 </section>	
 
 
+<section id="places" class="row">
 
-	<div class="clearfix"></div>
+  <?php echo make_section_header( 'I\'ve lived around.' ); ?>
+
+  <article class="span12 wrap">
+  
+    <div class="row">
+
+      <div class="span8 map">
+        <div  id="gMap" class="well"></div>
+      </div>
+
+      <div class="span4 list">
+        <?php echo get_location_list( 'nav navlist well', '' ); ?>
+      </div>
+
+    </div>
+		
+  </article>
+
+</section>
+
+
+<section id="contact" class="row">
+  <div class="span12 wrap">
+    <h2 class="page-title">Contact Me.</h2>
+    <div class="row">
+    <?php 
+    
+      echo do_shortcode('[contact-form 2 "Contact Me"]'); 
+    
+      /*
+       <div class="span8">
+         <p>[textarea your-message watermark "Enter your message."]</p>
+
+         <div class="row">
+           <div class="span4 left">
+             <span>Email: </span><a href="mailto:benjrallen@gmail.com">benjrallen@gmail.com</a>
+           </div>
+           <div class="span4 right">
+             <span>Call me:</span><a href="tel:415.531.8921">415.531.8921</span>
+           </div>
+         </div>
+
+       </div>
+      */
+      
+    ?>
+    </div>
+
+    <div class="row meta">
+      <div class="span4 left">
+        <span>Email: </span><a href="mailto:benjrallen@gmail.com">benjrallen@gmail.com</a>
+      </div>
+      <div class="span4 right">
+        <span>Call me: </span><span>415.531.8921</span>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 
 <?php get_footer(); ?>

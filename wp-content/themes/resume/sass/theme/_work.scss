@@ -6,6 +6,10 @@ section#work{
 	background: $mapBg;
 	@include padding-leader(1.5);
 
+	& .entry-box{
+		position: relative;
+	}
+
 	& .section-header{		
 		@include adjust-font-size-to( 20px );
 
@@ -18,8 +22,23 @@ section#work{
 
 	}
 	
+	& .pics{
+		text-align: center;
+		& img{
+			max-width: 100%;
+			height: auto;
+			margin-right: 2em;
+			@include margin-trailer(1.5);
+			border: 1px solid $grayLight;
+			@include inline-block;
+			vertical-align: top;
+		}
+	}
+	
 	& article{
+		//@include padding-leader(4);
 		@include padding-trailer(4);
+		position: relative;
 	}
 
 	& .post-title{
