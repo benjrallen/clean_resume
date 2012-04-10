@@ -688,7 +688,7 @@ try{
 		
 		//here i am going to load the 
 		me.setupConstants = function(){
-			if ( typeof google !== 'undefined' ) {
+			if ( typeof google !== 'undefined' && typeof google.maps !== 'undefined' ) {
 				
 				//remove global access to this setup function
 				if ( window[me.globalInitID] )
@@ -735,6 +735,8 @@ try{
 					script.type = "text/javascript";
 					script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback="+me.globalInitID;
 					document.body.appendChild(script);
+					
+					console.log('loading script');
 				}
 				
 				
