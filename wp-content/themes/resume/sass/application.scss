@@ -133,6 +133,8 @@ $sidebar-width: 232px;
 	z-index: 100000;
 	overflow-y: scroll;
 	display: none;
+	top: 0;
+	left: 0;
 	
 	& #closeSubwayTiles{
 		position: fixed;
@@ -143,7 +145,7 @@ $sidebar-width: 232px;
 		@include padding-trailer(0.25);
 		padding-left: 1em;
 		padding-right: 1em;
-		color: #font-color;
+		color: $base-white;
 		background: $base-bg;
 		//border-right: 1px solid $font-color;
 		//border-bottom: 1px solid $font-color;
@@ -151,6 +153,15 @@ $sidebar-width: 232px;
 		@include adjust-font-size-to( 14px );
 		cursor: pointer;
 		cursor: hand;
+		
+		& span, & small{
+			@include inline-block;
+			vertical-align: top;
+		}
+
+		& .times{
+			@include adjust-font-size-to(16px, 1);
+		}
 		
 		&:hover{
 			@include opacity(1);
@@ -221,6 +232,7 @@ $sidebar-width: 232px;
 			display: block;
 			margin-left: 1em;
 			margin-right: 1em;
+			list-style: none outside;
 			
 			& li{
 				@include margin-leader(0.5);

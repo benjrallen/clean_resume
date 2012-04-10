@@ -77,7 +77,7 @@
 	<body <?php body_class(); ?>>
 
 		<div id="subwayTilesWrap">
-		  <span id="closeSubwayTiles">x<small>(close Subway Tiles)</small></span>
+		  <span id="closeSubwayTiles"><span class="times">&times;</span><small>(close Subway Tiles)</small></span>
 		  <nav id="jsui">
       	<header>
       		<h4>Subway Tiles</h4>

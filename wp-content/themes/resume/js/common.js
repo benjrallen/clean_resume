@@ -70,7 +70,8 @@
 
 	function subwayTiles(){
 		//handle click on the stLink to open up the interface, but only do it for webkit cause webkit is awesome
-		var stLink = findNavLink('pictures');
+		//var stLink = findNavLink('pictures');
+		var stLink = $('#subwayTilesLink');
 		
 		if( stLink ){
 			
