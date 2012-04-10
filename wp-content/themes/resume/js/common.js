@@ -215,88 +215,89 @@
 		}		
 	}
 	
-	//this project has a right and a left primary nav menu.
-	function autoMenu(){
-		if ( $('#header nav').length ) {
-			
-			$('#header nav').each(function(){
-				
-				var nav = $(this),
-					lis = $(this).find('li'),
-					innerMargin = 75;
-		
-				var sizeItUp = function(){
-								
-					//make total item width
-					var lisW = 0;
-					
-					lis.each(function(){
-						lisW += $(this).width();
-					});
-					
-					//now calculate the right margin for the lis
-					//var margin = Math.floor( ( nav.width() - lisW ) / (lis.length - 1) - 3 );
-					var margin = Math.floor( ( menuWidth/2 - innerMargin - basePadding - lisW ) / (lis.length - 1) - 3 );
-					
-					if( nav.is('#accessLeft') ){
-						//console.log('accessLeft', nav );
-						lis.not(':first').css({ marginLeft: margin });
-					} else {
-						//console.log('accessRight', nav );
-						lis.not(':last').css({ marginRight: margin });
-					}
-					
-					//lis.not(':last').css({ marginRight: margin });
-				};
-				
-				//size up the menu		
-				$(window).resize( sizeItUp );
-				
-				//find the current_page item if it is a special post type archive
-				lis.each(function(){				
-					if ( $(this).find('a').attr('href') === window.location.href ) {
-						$(this).addClass('current-menu-item current_page_item');
-					}
-				});
-				
-			});
-						
-//			var sizeItUp = function(){
-//				if ( $(window).width() >= maxWidth ){
-//				
-//					//to make total item width
-//					var	lisW = 0;
-//					
-//					lis.each(function(){
-//						lisW += $(this).width();
-//					});
-//					
-//					//now calculate the right margin for the lis
-//					var margin = Math.floor( ( nav.width() - lisW ) / (lis.length - 1) - 3 );
-//					
-//					lis.not(':last').css({ marginRight: margin });
-//					
-//					//console.log('fit those nav items', nav, nav.width(), lisW, margin);
-//				}
-//			};
-
-			//size up the menu		
-			$(window).resize();
-			
-			
-		}
-	}
+// 	
+// 	//this project has a right and a left primary nav menu.
+// 	function autoMenu(){
+// 		if ( $('#header nav').length ) {
+// 			
+// 			$('#header nav').each(function(){
+// 				
+// 				var nav = $(this),
+// 					lis = $(this).find('li'),
+// 					innerMargin = 75;
+// 		
+// 				var sizeItUp = function(){
+// 								
+// 					//make total item width
+// 					var lisW = 0;
+// 					
+// 					lis.each(function(){
+// 						lisW += $(this).width();
+// 					});
+// 					
+// 					//now calculate the right margin for the lis
+// 					//var margin = Math.floor( ( nav.width() - lisW ) / (lis.length - 1) - 3 );
+// 					var margin = Math.floor( ( menuWidth/2 - innerMargin - basePadding - lisW ) / (lis.length - 1) - 3 );
+// 					
+// 					if( nav.is('#accessLeft') ){
+// 						//console.log('accessLeft', nav );
+// 						lis.not(':first').css({ marginLeft: margin });
+// 					} else {
+// 						//console.log('accessRight', nav );
+// 						lis.not(':last').css({ marginRight: margin });
+// 					}
+// 					
+// 					//lis.not(':last').css({ marginRight: margin });
+// 				};
+// 				
+// 				//size up the menu		
+// 				$(window).resize( sizeItUp );
+// 				
+// 				//find the current_page item if it is a special post type archive
+// 				lis.each(function(){				
+// 					if ( $(this).find('a').attr('href') === window.location.href ) {
+// 						$(this).addClass('current-menu-item current_page_item');
+// 					}
+// 				});
+// 				
+// 			});
+// 						
+// //			var sizeItUp = function(){
+// //				if ( $(window).width() >= maxWidth ){
+// //				
+// //					//to make total item width
+// //					var	lisW = 0;
+// //					
+// //					lis.each(function(){
+// //						lisW += $(this).width();
+// //					});
+// //					
+// //					//now calculate the right margin for the lis
+// //					var margin = Math.floor( ( nav.width() - lisW ) / (lis.length - 1) - 3 );
+// //					
+// //					lis.not(':last').css({ marginRight: margin });
+// //					
+// //					//console.log('fit those nav items', nav, nav.width(), lisW, margin);
+// //				}
+// //			};
+// 
+// 			//size up the menu		
+// 			$(window).resize();
+// 			
+// 			
+// 		}
+// 	}
 	
 	
 })(jQuery);
 
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-28492745-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+  // 
+  // var _gaq = _gaq || [];
+  // _gaq.push(['_setAccount', 'UA-28492745-1']);
+  // _gaq.push(['_trackPageview']);
+  // 
+  // (function() {
+  //   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  //   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  //   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  // })();

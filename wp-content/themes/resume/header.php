@@ -41,6 +41,10 @@
 		<script src="<?php bloginfo('template_directory'); ?>/js/modernizr.js"></script>
 
 		<script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-28492745-1']);
+      _gaq.push(['_trackPageview']);
+
 			Modernizr.load([
 				{ load : ['//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'],
 				    complete: function () { if ( !window.jQuery ){ Modernizr.load(Ease.TemplateUrl+'/js/jquery.js'); } }
@@ -48,9 +52,11 @@
 				{ test: window.JSON, nope: Ease.TemplateUrl+'/js/json2.js' },
 				/* plugins.js & common.js fordevelopment */
 				{ load : Ease.TemplateUrl+'/js/plugins.js' },
-				{ load : Ease.TemplateUrl+'/js/common.js' }
+				{ load : Ease.TemplateUrl+'/js/common.js' },
 				/* concatenate and optimize seperate script files for deployment using google closure compiler (compiler.jar) in js folder */
-				//{ load : Guru.TemplateUrl+'/js/theme.js' }
+				//{ load : Guru.TemplateUrl+'/js/theme.js' },
+				{ load : Ease.TemplateUrl+'/js/common.js' },
+        { load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js' },
 			]);
 		</script>
 		
