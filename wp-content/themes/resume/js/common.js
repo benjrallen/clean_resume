@@ -2,16 +2,20 @@
 	
 	//transitionTime
 	var EaseTransTime = 350,
-		maxWidth = 960,
-		menuWidth = 900,
-		basePadding = 35,
+		navHeight = null,
+		//maxWidth = 960,
+		//menuWidth = 900,
+		//basePadding = 35,
 		easeTiles = false,
 		isWebkit = true;
-		try{
-			WebKitPoint;
-		} catch(e) {
+		
+		if( typeof WebKitPoint === 'undefined' )
 			isWebkit = false;
-		}
+		// try{
+		// 	WebKitPoint;
+		// } catch(e) {
+		// 	isWebkit = false;
+		// }
 		
 	$(document).ready(function(){
 		//console.log('hello common ready');
@@ -21,7 +25,7 @@
 		typeof WebKitPoint !== 'undefined' ? Ease.webkit = true : Ease.webkit = false;
 				
 		//autoMenu();
-
+		navHeight = $('#access').outerHeight();
 
 		//console.log( 'eyt', eyt );
 
@@ -29,10 +33,68 @@
 		//videosPage();
 		locationsPage();
 		replaceResumeLink();
+		scrollToLinks();
 		subwayTiles();
+		
+		$('.page-title strong').tooltip({
+			placement: 'right'
+			//animation: 'show',
+			//title: 'hello',
+			//content: 'You can hire me!'
+		});
+		
 	});	
 
 
+	function scrollToLinks(){
+		var links = [
+			{ key: '#work', el: findNavLink('portfolio') },
+			{ key: '#about', el: findNavLink('home') },
+			{ key: '#places', el: $('.page-title strong') },
+			{ key: '#contact', el: $('a.contact') }
+		];
+				
+		$.each( links, function(){
+			if( $(this.key).length && this.el.length ){
+				var $this = this;
+				
+				var scrollToThis = function(e){
+					e.preventDefault();
+
+					var off = $($this.key).offset(),
+						scrollTop = $(window).scrollTop();
+					
+					//lazyload throws off the scroll to elements beneath it.
+					//if( off.top - navHeight !== scrollTop ){
+						$that = this,
+						$args = arguments;
+						
+						$('html, body').stop(false).animate({scrollTop: off.top - navHeight + 'px'}, 4 * EaseTransTime, function(){
+							//if( off.top - navHeight - scrollTop > 300 )
+							var off = $($this.key).offset(),
+								scrollTop = $(window).scrollTop();
+
+								//console.log( $this, 'scrolling', $(window).height(), off.top - navHeight, scrollTop );
+							if( off.top - navHeight - scrollTop > $(window).height() ){
+								scrollToThis.apply($that, $args);
+							}
+						});
+					//}
+					
+					$('#header').find('.active').removeClass('active');
+					if( $('#header').find(this).length ){
+						$this.el.parent().addClass('active');
+					}
+					
+				};
+				
+				$this.el.click(scrollToThis);
+			}
+		});
+
+		links = null;
+	}
+	
 	
 	function replaceResumeLink(){
 		if( $('#resumeHref').length ){
@@ -133,20 +195,19 @@
 		}
 	}	
 	
-	function videosPage(){
-		if( $('#videos').length )
-			new EaseYouTubePlayer({
-				user: 'nakedincorners',
-				playerIsPopup: true,
-				//localCallUrl: Ease.TemplateUrl + '/js/videos.php',
-				maxResults: 6 //google limit is 50			
-			});
-	}
+	// function videosPage(){
+	// 	if( $('#videos').length )
+	// 		new EaseYouTubePlayer({
+	// 			user: 'nakedincorners',
+	// 			playerIsPopup: true,
+	// 			//localCallUrl: Ease.TemplateUrl + '/js/videos.php',
+	// 			maxResults: 6 //google limit is 50			
+	// 		});
+	// }
 	
 	function worksPage(){
 		if( $('#work').length ) {
 			var cont = $('#work'),
-				navHeight = $('#access').outerHeight(),
 				pics = cont.find('.pics'),
 				storeStr = 'store_margin';
 			
@@ -197,7 +258,21 @@
 					menu = $(this).parent().children('.entry-box');
 				
 				//console.log( $(this), menu );
-
+				
+				//lazyload the images
+				$this.find('img').each(function(){
+					// $('<img />', {
+					// 	src: full.url,
+					// 	height: full.height,
+					// 	width: full.width
+					// }).appendTo( cont )
+					$(this).lazyload({
+			    	 	placeholder : Ease.TemplateUrl+'/images/transparent.gif',
+			    	 	effect      : "fadeIn"
+						//container	: me.wrap.parent()
+			    	});
+				});
+				
 				$this.bind('menuview', {additional_div: menu}, function (event, visible, inOrOut, direction) {
 					if( visible ){
 						if( inOrOut === 'in' ){
@@ -216,89 +291,5 @@
 		}		
 	}
 	
-// 	
-// 	//this project has a right and a left primary nav menu.
-// 	function autoMenu(){
-// 		if ( $('#header nav').length ) {
-// 			
-// 			$('#header nav').each(function(){
-// 				
-// 				var nav = $(this),
-// 					lis = $(this).find('li'),
-// 					innerMargin = 75;
-// 		
-// 				var sizeItUp = function(){
-// 								
-// 					//make total item width
-// 					var lisW = 0;
-// 					
-// 					lis.each(function(){
-// 						lisW += $(this).width();
-// 					});
-// 					
-// 					//now calculate the right margin for the lis
-// 					//var margin = Math.floor( ( nav.width() - lisW ) / (lis.length - 1) - 3 );
-// 					var margin = Math.floor( ( menuWidth/2 - innerMargin - basePadding - lisW ) / (lis.length - 1) - 3 );
-// 					
-// 					if( nav.is('#accessLeft') ){
-// 						//console.log('accessLeft', nav );
-// 						lis.not(':first').css({ marginLeft: margin });
-// 					} else {
-// 						//console.log('accessRight', nav );
-// 						lis.not(':last').css({ marginRight: margin });
-// 					}
-// 					
-// 					//lis.not(':last').css({ marginRight: margin });
-// 				};
-// 				
-// 				//size up the menu		
-// 				$(window).resize( sizeItUp );
-// 				
-// 				//find the current_page item if it is a special post type archive
-// 				lis.each(function(){				
-// 					if ( $(this).find('a').attr('href') === window.location.href ) {
-// 						$(this).addClass('current-menu-item current_page_item');
-// 					}
-// 				});
-// 				
-// 			});
-// 						
-// //			var sizeItUp = function(){
-// //				if ( $(window).width() >= maxWidth ){
-// //				
-// //					//to make total item width
-// //					var	lisW = 0;
-// //					
-// //					lis.each(function(){
-// //						lisW += $(this).width();
-// //					});
-// //					
-// //					//now calculate the right margin for the lis
-// //					var margin = Math.floor( ( nav.width() - lisW ) / (lis.length - 1) - 3 );
-// //					
-// //					lis.not(':last').css({ marginRight: margin });
-// //					
-// //					//console.log('fit those nav items', nav, nav.width(), lisW, margin);
-// //				}
-// //			};
-// 
-// 			//size up the menu		
-// 			$(window).resize();
-// 			
-// 			
-// 		}
-// 	}
-	
 	
 })(jQuery);
-
-  // 
-  // var _gaq = _gaq || [];
-  // _gaq.push(['_setAccount', 'UA-28492745-1']);
-  // _gaq.push(['_trackPageview']);
-  // 
-  // (function() {
-  //   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  //   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  //   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  // })();

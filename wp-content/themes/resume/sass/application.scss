@@ -14,6 +14,10 @@ body{
 	@include raleway;
 }
 
+a{
+	@include single-transition( color, 0.1s, ease-in-out );
+
+}
 
 /* Parts */
 
@@ -123,6 +127,25 @@ $sidebar-width: 232px;
 }
 
 
+#subwayTilesLink{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	z-index: 1000;
+	
+	@include adjust-font-size-to(10px);
+	@include sans-serif;
+	color: $grayLighter;
+	padding-right: 1em;
+	text-transform: lowercase;
+	letter-spacing: 1px;
+	cursor: pointer;
+	cursor: hand;
+	&:hover{
+		color: $base-white;
+		text-decoration: none;
+	}
+}
 
 #subwayTilesWrap{
 	position: fixed;
@@ -156,11 +179,11 @@ $sidebar-width: 232px;
 		
 		& span, & small{
 			@include inline-block;
-			vertical-align: top;
+			vertical-align: baseline;
 		}
 
 		& .times{
-			@include adjust-font-size-to(16px, 1);
+			@include adjust-font-size-to(18px, 1.5);
 		}
 		
 		&:hover{

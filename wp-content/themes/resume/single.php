@@ -8,6 +8,13 @@
  */
 
 get_header(); ?>
+
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
+
 <?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>
 				<nav id="nav-above" class="navigation">
 					<?php previous_post_link( '%link', '' . _x( '&larr;', 'Previous post link', 'boilerplate' ) . ' %title' ); ?>

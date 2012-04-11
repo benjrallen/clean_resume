@@ -44,7 +44,7 @@ get_header(); ?>
 
         <div class="span8">
           <header>
-      		  <h2 class="page-title"><?php the_title(); ?><strong>*</strong></h2>
+      		  <h2 class="page-title"><?php the_title(); ?><strong data-original-title="and you can hire me!">*</strong></h2>
             <div class="row entry-content">
               <div class="span8">
         				<?php 
@@ -68,8 +68,10 @@ get_header(); ?>
     	      echo '<div class="pic">'.get_the_post_thumbnail( $post->ID, 'page-thumb' ).'</div>';
     	    }
     	  ?>
+    	    
     	    <div id="fpMenu" class="row">
     				<div class="span3">    				  
+        	      <?php /* ?>
       				  <ul class="nav nav-list well">
                   <li class="nav-header">
                     Look it.
@@ -84,6 +86,7 @@ get_header(); ?>
                     <a href="#">Places</a>
                   </li>
                 </ul>
+          	    <?php */ ?>
 
     				    <a class="contact btn btn-primary btn-large">Contact Me</a>
 

@@ -118,535 +118,535 @@ try{
 })(jQuery);
 
 
-
-(function($){
-
-	function EaseYouTubePlayer(config){
-		//default configurable variables
-		var me = this,
-			defaults = {
-				user: 'benjrallen',
-				playlist: false,
-				maxResults: 8, //google limit is 50
-				page: 1,
-				playerId: 'easeYtPlayer',
-				playerContId: 'easeVideoPlayer',
-				thumbsContId: 'easeVideoBlocks',
-				loadingMaskId: 'easeLoadingMask',
-				thumbBlockClass: 'easeThumbBlock',
-				imgContClass: 'easeImg',
-				imgLinkClass: 'easeImgLink',
-				imgClass: 'easeVideoThumb',
-				titleEl: 'div',
-				titleClass: 'easeThumbTitle',
-				descClass: 'easeDesc',
-				playClass: 'easePlay',
-				playText: 'Play',
-				playerCloseId: 'easeClose',
-				playerIsPopup: false, //used to decide if we need to lightbox and position the player or not
-				playerCloseText: 'x',
-				playerMaxHeight: 853,
-				playerPercent: 0.8,
-				playerRatioW: 16, //used when calculating dimensions.  default ratio is 16/9
-				playerRatioH: 9, //used when calculating dimensions.  default ratio is 16/9
-				paginateContId: 'easePagin',
-				navClass: 'easeNav',
-				navPrevText: '<< Prev',
-				navNextText: 'Next >>',
-				//no longer make the local call
-				//localCallUrl: window.location.protocol + '//' + window.location.host + window.location.pathname + 'js/videos.php',
-				flashPlayerSrc: 'https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js' //used in lte7, google cdn by default
-			};
-	
-		for (var key in config) {
-			defaults[key] = config[key] || defaults[key];
-		}
-	
-		for (var key in defaults) {
-			me[key] = defaults[key];
-		}
-	
-		//non-configurable constants
-		me.CONSTANT = 'constant';
-		
-		//for communicating with google api
-		me.API_URL = 'https://gdata.youtube.com/feeds/api/videos';
-		me.API_USER_UPLOADS = 'https://gdata.youtube.com/feeds/api/users/'+me.user+'/uploads';
-		me.API_USER_PLAYLISTS = 'https://gdata.youtube.com/feeds/api/users/'+me.user+'/playlists';
-		me.API_PLAYLIST_FEED = 'https://gdata.youtube.com/feeds/api/playlists/';
-//		me.ALT = 'json-in-script';
-		me.ALT = 'jsonc';
-		me.START_INDEX = null; //gets update in init
-		me.TOTAL_ITEMS = null; //get set in json callback
-		
-		me.LOADING = true;
-		me.loadTimeout = null;
-		me.swfTimeout = null;
-		me.FIRST_LOAD = true;
-		me.CURRENT_VIDEO = null;
-		me.player = null;
-		me.showPlayer = false;
-		me.IS_LTE7 = $('.lte7').length;
-		me.IS_LTE8 = $('.lte8').length;
-		me.IS_FLASH = false;
-		
-		me.API_READY = false;
-		me.PLAYER_READY = false;
-		
-		//me.init();
-		me.init = function(){	
-			
-			//load the youtube player.  SWFObject if lte IE7, else iFrameAPI	
-			me.IS_LTE7 ? me.loadSWFObject() : me.loadIFrameAPI();
-			//me.loadSWFObject();
-			
-			//find playerCont and blocks cont
-			me.playerCont = $('#'+me.playerContId);
-			me.thumbsCont = $('#'+me.thumbsContId);
-			//return alert if not there.
-			if ( !me.playerCont.length || !me.thumbsCont.length )
-				return alert('script won\'t run because video script has no place to put the player or the videos! please provide ids.');
-			
-			//position thumbsCont as relative (do it here in case container used elsewhere in site)
-			me.thumbsCont.addClass('easeVideos'); //added for css
-			
-			//update start index
-			me.updateStartIndex();
-			
-			
-			//find and define loading mask
-			me.loadingMask = $('#'+me.loadingMaskId);
-			//if not there, create it
-			if (!me.loadingMask.length)
-				me.loadingMask = $('<div />', { id: me.loadingMaskId }).prependTo( me.thumbsCont );
-			
-			//show it in case it is hidden
-			me.loadingMask.show();
-			
-			if( me.playerIsPopup ){
-				//find and define playerClose button
-				me.playerClose = $('#'+me.playerCloseId);
-				//not there? create it.
-				if (!me.playerClose.length)
-					me.playerClose = $('<a />', { 
-						id: me.playerCloseId, 
-						text: me.playerCloseText, 
-						title: 'Close video'
-					}).insertBefore( me.playerCont );
-							
-				//attach the handler to the body
-				$('body').click(me.onPlayerClose);
-
-				//attach window resize and document scroll paramaters
-				$(window).resize(me.positionPlayer);
-				$(document).scroll(me.positionPlayer);
-			}
-			
-			//get the data... running through our own little url getter script cause IE can't do cross-domain http requests.  PHP can, and it will send us back the data.
-			return me.getVideos();
-		};
-		
-		//gets called for the iframe being ready, or when swfobject is loaded
-		me.onYouTubePlayerAPIReady = function(){
-			me.API_READY = true;
-			return me.loadPlayer();
-		};
-
-		//loads the iframe api asynchrounously per google's examples
-		me.loadIFrameAPI = function(){			
-			//set the playerAPIReady function global for the api load ~event to work
-			window['onYouTubePlayerAPIReady'] = me.onYouTubePlayerAPIReady;		
-
-			var tag = document.createElement('script');
-			tag.src = 'http://www.youtube.com/player_api';
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			//this inserts into the head, and calls a global function (onYouTubePlayerAPIReady)... defined and exposed below.
-		};
-		
-		me.checkForSWFObject = function(){
-			return ( typeof swfobject === 'undefined' ? me.swfTimeout = setTimeout( me.checkForSWFObject, 10 ) : me.onYouTubePlayerAPIReady() );
-		};
-		
-		//used for IE7 and below, to load swfObject. (there has to be a better way to do this. . . )
-		me.loadSWFObject = function(){
-			me.IS_FLASH = true;
-			
-			var tag = document.createElement('script');
-			//tag.onload = me.flashPlayerLoaded;
-			tag.src = me.flashPlayerSrc;
-			tag.async = true;
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
-			return me.checkForSWFObject();
-		};
-		
-		//USED ONLY TO LOG OUT PLAYLISTS SO WE CAN GRAB THE IDS TO LOAD THE LIST FOR CLIENT
-		me.getUserPlaylists = function(){
-			if( me.user ){
-				var request = {
-					alt: me.ALT,
-					v: 2	
-				};
-				
-				return $.getJSON( me.API_USER_PLAYLISTS+'?callback=?', request, function(json){
-					console.log('user: '+me.user+', playlists: ', json);
-				});
-			}
-		};
-		
-		//TODO:  only use local php shiv if necessary (thinking IE here)
-		me.getVideos = function(){
-			var request = {
-				//apiUrl: me.API_USER_UPLOADS,
-				alt: me.ALT, //alt is json-c, which somehow magically gets around parsing of json data and cross-domain origin restrictions... but ie can't natively handle it.
-				'max-results': me.maxResults,
-				'start-index': me.START_INDEX,
-				v: 2 //api version 2... defaults to 1
-			};
-			//console.log( 'me.getVideos', request );
-						
-			var url = ( me.playlist ? me.API_PLAYLIST_FEED + me.playlist : me.API_USER_UPLOADS ); 
-			
-			//get the data... append callback=? to make the request for jsonp.
-		 	return $.getJSON( url+'?callback=?', request, me.printVideoBlocks );
-		};
-		
-		
-		//used as callback on load user videos
-		me.printVideoBlocks = function(json, status){
-			//console.log('me.printVideoBlocks', json );
-			
-			me.LOADING = false;
-			
-			if (status === "success" && json.data) {
-				
-				if ( json.data.items ) {
-					//set total items
-					me.TOTAL_ITEMS = json.data.totalItems;
-					
-					//remove container and paginating if existing already
-					$('.easeCont, #'+me.paginateContId).remove();
-					
-					//make continer
-					var cont = $('<div />', {}).addClass('easeCont').appendTo( me.thumbsCont );
-					
-					//make a block for each video returned
-					for (var i=0, j=json.data.items.length; i<j; i++) {
-						//playlist feed is different than video feed;
-						var video = ( me.playlist ? json.data.items[i].video : json.data.items[i] );
-						me.makeVideoBlock( video ).appendTo( cont );
-						video = null;
-					}
-					
-					//make the pagination
-					if ( json.data.totalItems > me.maxResults )
-						me.makePagination().insertAfter( me.thumbsCont );
-					
-					//loaded!
-					me.loadingMask.hide();
-					
-					//open first video in player
-					if (me.FIRST_LOAD) {
-						me.FIRST_LOAD = false;
-						me.CURRENT_VIDEO = ( me.playlist ? json.data.items[0].video : json.data.items[0] );
-						//me.loadPlayer();
-					}
-				} else {
-					//no items returned... this is a weird case when a playlist contains 'rejected' videos that youtube won't dish out.  case i have seen is that it is a duplicate video to one already uploaded.  if that is the only video being fetched when the new pageblock loads, nothing will show.
-					
-					//so, let's load the first page instead, as long as it's not supposed to be the first load.
-					if( !me.FIRST_LOAD ){
-						me.page = 1;
-						//update start index
-						me.updateStartIndex();						
-						me.LOADING = true;
-						return me.getVideos();
-					}
-				}
-			} else if ( json.error && json.error.message ){
-				me.thumbsCont.text( json.error.message );
-			}
-		};
-		
-		//callback for loading the youtube flash embed
-		me.onYouTubePlayerReady = function(playerId){
-			me.onPlayerReady(); //sets a variable
-			//set the player
-			return me.player = document.getElementById( playerId );
-		};
-		
-		me.loadPlayer = function(){
-			//console.log('load player', me.CURRENT_VIDEO);
-			if ( !me.API_READY || !me.CURRENT_VIDEO )
-				return me.loadTimeout = setTimeout( me.loadPlayer, 10 );
-			
-			var dim = me.makePlayerDimensions();
-			
-			if( !me.IS_FLASH ){		
-				
-			    me.player = new YT.Player( me.playerContId, {
-				//return me.player = new YT.Player( me.playerContId, {
-			    	height: dim.playerHeight,
-			    	width: dim.playerWidth,
-			    	videoId: me.CURRENT_VIDEO.id,
-			    	events: {
-			    		'onReady': me.onPlayerReady
-			    	}
-			    }); 
-			
-				//return me.playerCont = $('#'+me.playerContId);
-			} else {
-				//we are using the flash player				
-				//set the global player ready callback
-				window['onYouTubePlayerReady'] = me.onYouTubePlayerReady;
-				
-				var params = { allowScriptAccess: 'always' };
-				var atts = { id: me.playerContId };
-				swfobject.embedSWF(
-					//swfUrlStr - the video location string with added params
-					'http://www.youtube.com/v/'+me.CURRENT_VIDEO.id+'?enablejsapi=1&playerapiid='+me.playerContId+'&version=3',
-					//replaceElemIdStr
-					me.playerContId,
-					//widthStr
-					dim.playerWidth,
-					//heightStr
-					dim.playerHeight,
-					//swfVersionStr
-					'8',
-					//xiSwfUrlStr - (Optional) Specifies the URL of your express install SWF. Not used in this example.
-					null,
-					//flashVarsObj - (Optional) Specifies your FlashVars in name:value pairs. Not used in this example.
-					null,
-					//parObj - parameters for embed object
-					params,
-					//AttObj - attributes for the embed object
-					atts
-				);
-			}
-
-			return me.playerCont = $('#'+me.playerContId);
-		};
-		
-		me.onPlayerReady = function(){
-			me.PLAYER_READY = true;
-		};
-		
-		//this is used to calculate the optimal dimensions for the player to be used in different places in this class
-		me.makePlayerDimensions = function(){			
-			var bW = $(window).width(),
-				bH = $(window).height(),
-				pW = 0,
-				pH = 0;
-			
-			//if player is lightbox style, then numbers are based on the window width & height
-			if ( me.playerIsPopup ){
-				var adjW = Math.floor( bW * me.playerPercent );
-				
-				//uses 16/9 ratio for the window
-				if ( bW < bH ){
-					pW = adjW;
-				} else {
-					pW = Math.floor( bH * me.playerPercent * me.playerRatioW / me.playerRatioH );
-				}
-	
-				if ( pW > adjW )
-					pW = adjW;
-				
-				if ( pW > me.playerMaxHeight )
-					pW = me.playerMaxHeight;
-				
-				pH = Math.floor( me.playerRatioH / me.playerRatioW * pW );
-				//set after condition
-
-			} else {
-				//otherwise, player hight is based on the width of the container
-				pW = $('#'+me.playerContId).width();
-				
-			}
-
-			pH = Math.floor( me.playerRatioH / me.playerRatioW * pW );
-			//console.log( 'player dimensions', bW, pW, bH, pH );
-			
-			return {
-				baseWidth: bW,
-				baseHeight: bH,
-				playerWidth: pW,
-				playerHeight: pH
-			};
-		};
-
-		me.positionPlayer = function(){			
-			if ( me.player && me.showPlayer && me.PLAYER_READY ) {
-				var	dimensions = me.makePlayerDimensions(),
-					bW = dimensions.baseWidth,
-					bH = dimensions.baseHeight,
-					pW = dimensions.playerWidth, //player width
-					pH = dimensions.playerHeight;
-				
-				//console.log( 'position player', dimensions, bW, bH, pW );
-								
-				var left = Math.floor( (bW - pW) /2 ),
-					//top = Math.floor( $(document).scrollTop() + bH * 0.1 );
-					top = Math.floor(  bH * 0.1 );
-					
-				//console.log( 'positionPlayer', $(me.player), me.player.getPlaybackQuality() );		
-				//player.width( pW ).height( pH );
-				
-				//flash player size is set by dimensions of container, iframe by an API method
-				!me.IS_FLASH ?
-					me.player.setSize( pW, pH ) :
-					me.playerCont.width( pW ).height( pH );
-				
-				me.playerCont.css({ left: left, top: top });
-				
-				//console.log( me.playerCont, left);
-				me.playerClose.css({ left: left + pW, top: top });
-			}
-		};
-		
-		me.loadVideo = function(){
-			//console.log( 'me.loadVideo', me.CURRENT_VIDEO, me.player, me.PLAYER_READY);
-			//if (me.player) {
-			if (me.player && me.PLAYER_READY) {
-				me.showPlayer = true;
-				me.player.loadVideoById( me.CURRENT_VIDEO.id, 0, 'large');
-				
-				//position it?
-				if( me.playerIsPopup )
-					me.positionPlayer();
-				
-				me.player.playVideo();
-			}			
-		};
-		
-		me.closePlayer = function(){
-			if (me.player && me.showPlayer) {
-				me.showPlayer = false;
-				me.player.stopVideo();
-								
-				//$(me.player).css({ left: -10000 });
-				me.playerCont.css({ left: -10000 });
-				me.playerClose.css({ left: -10000 });
-			}
-		};
-		
-		me.makePagination = function(){
-			var block = $('<div />', {
-					id: me.paginateContId
-				});
-			
-			//clearfix
-			$('<div />').addClass('clearfix').appendTo( block );
-			
-			//prev button
-			$('<a />', { text: me.navPrevText }).addClass( me.navClass+' prev' ).click( me.onPaginClick ).appendTo( block );
-			
-			//next button
-			$('<a />', { text: me.navNextText }).addClass( me.navClass+' next' ).click( me.onPaginClick ).appendTo( block );
-			
-			//text
-			$('<span />', {
-				text: 'Page '+me.page+' of '+Math.ceil( me.TOTAL_ITEMS / me.maxResults )
-			}).appendTo( block );
-			
-			//clearfix
-			$('<div />').addClass('clearfix').appendTo( block );
-			
-			return block;
-		};
-		
-		//makes dom element with proper handlers?
-		me.makeVideoBlock = function( item ){
-			if ( !item ) return false;
-			//console.log('me.makeVideoBlock', item );
-			
-			//create the block, attach data and click handler
-			var block = $('<div />', {}).addClass(me.thumbBlockClass).data({ itemData: item }).click(me.onBlockPlay);
-			
-			if ( item.thumbnail.sqDefault ) {
-				$('<div />', {
-					html: '<a class="'+me.imgLinkClass+'" title="'+(item.title||'')+': '+(item.description||'')+'"><img src="'+item.thumbnail.sqDefault+'" class="'+me.imgClass+'" /></a>'
-				}).addClass( me.imgContClass ).appendTo( block );
-			}
-			
-			if ( item.title ) {
-				$('<'+me.titleEl+' />', {
-					//html: '<a>'+item.title+'</a>'
-					html: item.title
-				}).addClass( me.titleClass ).appendTo( block );
-			}
-			
-			if ( item.description ) {
-				$('<div />', {
-					html: item.description
-				}).addClass( me.descClass ).appendTo( block );
-			}
-			
-			$('<a />', {
-				text: me.playText
-			}).addClass( me.playClass )
-			//.click( me.onBlockPlay )
-			.appendTo( block );
-
-			return block;
-		};
-		
-		me.onPaginClick = function(e){
-			//console.log('onPaginClick!', e, $(this));
-			if (!me.LOADING) {
-				
-				if ( $(this).hasClass('next') ){
-					//go next
-					me.page === Math.ceil( me.TOTAL_ITEMS / me.maxResults ) ?
-						me.page = 1 :
-						me.page++;
-				} else {
-					//go prev
-					me.page === 1 ?
-						me.page = Math.ceil( me.TOTAL_ITEMS / me.maxResults ) :
-						me.page--;
-				}
-				
-				//update start index
-				me.updateStartIndex();
-	
-				//show loadingMask case it is hidden
-				me.loadingMask.show();
-				
-				me.LOADING = true;
-				
-				return me.getVideos();
-			}
-		};
-		
-		me.onPlayerClose = function(e){
-			//console.log('onPlayerClose', e, $(this), e.target );
-			//prevent click on player from closing the player
-			if ( e.target !== me.player )
-				me.closePlayer();	
-		};
-		
-		me.onBlockPlay = function(e){
-			//console.log('onBlockPlay!', e, $(this));
-			e.stopPropagation();
-			
-			me.CURRENT_VIDEO = $(this).data('itemData');
-			
-			return me.loadVideo();			
-		};
-		
-		me.updateStartIndex = function(){
-			return me.START_INDEX = ( (me.page - 1) * me.maxResults + 1 );
-		};
-		
-		me.init();
-	};
-
-	window['EaseYouTubePlayer'] = EaseYouTubePlayer;
-	
-})(jQuery);
-
+// 
+// (function($){
+// 
+// 	function EaseYouTubePlayer(config){
+// 		//default configurable variables
+// 		var me = this,
+// 			defaults = {
+// 				user: 'benjrallen',
+// 				playlist: false,
+// 				maxResults: 8, //google limit is 50
+// 				page: 1,
+// 				playerId: 'easeYtPlayer',
+// 				playerContId: 'easeVideoPlayer',
+// 				thumbsContId: 'easeVideoBlocks',
+// 				loadingMaskId: 'easeLoadingMask',
+// 				thumbBlockClass: 'easeThumbBlock',
+// 				imgContClass: 'easeImg',
+// 				imgLinkClass: 'easeImgLink',
+// 				imgClass: 'easeVideoThumb',
+// 				titleEl: 'div',
+// 				titleClass: 'easeThumbTitle',
+// 				descClass: 'easeDesc',
+// 				playClass: 'easePlay',
+// 				playText: 'Play',
+// 				playerCloseId: 'easeClose',
+// 				playerIsPopup: false, //used to decide if we need to lightbox and position the player or not
+// 				playerCloseText: 'x',
+// 				playerMaxHeight: 853,
+// 				playerPercent: 0.8,
+// 				playerRatioW: 16, //used when calculating dimensions.  default ratio is 16/9
+// 				playerRatioH: 9, //used when calculating dimensions.  default ratio is 16/9
+// 				paginateContId: 'easePagin',
+// 				navClass: 'easeNav',
+// 				navPrevText: '<< Prev',
+// 				navNextText: 'Next >>',
+// 				//no longer make the local call
+// 				//localCallUrl: window.location.protocol + '//' + window.location.host + window.location.pathname + 'js/videos.php',
+// 				flashPlayerSrc: 'https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js' //used in lte7, google cdn by default
+// 			};
+// 	
+// 		for (var key in config) {
+// 			defaults[key] = config[key] || defaults[key];
+// 		}
+// 	
+// 		for (var key in defaults) {
+// 			me[key] = defaults[key];
+// 		}
+// 	
+// 		//non-configurable constants
+// 		me.CONSTANT = 'constant';
+// 		
+// 		//for communicating with google api
+// 		me.API_URL = 'https://gdata.youtube.com/feeds/api/videos';
+// 		me.API_USER_UPLOADS = 'https://gdata.youtube.com/feeds/api/users/'+me.user+'/uploads';
+// 		me.API_USER_PLAYLISTS = 'https://gdata.youtube.com/feeds/api/users/'+me.user+'/playlists';
+// 		me.API_PLAYLIST_FEED = 'https://gdata.youtube.com/feeds/api/playlists/';
+// //		me.ALT = 'json-in-script';
+// 		me.ALT = 'jsonc';
+// 		me.START_INDEX = null; //gets update in init
+// 		me.TOTAL_ITEMS = null; //get set in json callback
+// 		
+// 		me.LOADING = true;
+// 		me.loadTimeout = null;
+// 		me.swfTimeout = null;
+// 		me.FIRST_LOAD = true;
+// 		me.CURRENT_VIDEO = null;
+// 		me.player = null;
+// 		me.showPlayer = false;
+// 		me.IS_LTE7 = $('.lte7').length;
+// 		me.IS_LTE8 = $('.lte8').length;
+// 		me.IS_FLASH = false;
+// 		
+// 		me.API_READY = false;
+// 		me.PLAYER_READY = false;
+// 		
+// 		//me.init();
+// 		me.init = function(){	
+// 			
+// 			//load the youtube player.  SWFObject if lte IE7, else iFrameAPI	
+// 			me.IS_LTE7 ? me.loadSWFObject() : me.loadIFrameAPI();
+// 			//me.loadSWFObject();
+// 			
+// 			//find playerCont and blocks cont
+// 			me.playerCont = $('#'+me.playerContId);
+// 			me.thumbsCont = $('#'+me.thumbsContId);
+// 			//return alert if not there.
+// 			if ( !me.playerCont.length || !me.thumbsCont.length )
+// 				return alert('script won\'t run because video script has no place to put the player or the videos! please provide ids.');
+// 			
+// 			//position thumbsCont as relative (do it here in case container used elsewhere in site)
+// 			me.thumbsCont.addClass('easeVideos'); //added for css
+// 			
+// 			//update start index
+// 			me.updateStartIndex();
+// 			
+// 			
+// 			//find and define loading mask
+// 			me.loadingMask = $('#'+me.loadingMaskId);
+// 			//if not there, create it
+// 			if (!me.loadingMask.length)
+// 				me.loadingMask = $('<div />', { id: me.loadingMaskId }).prependTo( me.thumbsCont );
+// 			
+// 			//show it in case it is hidden
+// 			me.loadingMask.show();
+// 			
+// 			if( me.playerIsPopup ){
+// 				//find and define playerClose button
+// 				me.playerClose = $('#'+me.playerCloseId);
+// 				//not there? create it.
+// 				if (!me.playerClose.length)
+// 					me.playerClose = $('<a />', { 
+// 						id: me.playerCloseId, 
+// 						text: me.playerCloseText, 
+// 						title: 'Close video'
+// 					}).insertBefore( me.playerCont );
+// 							
+// 				//attach the handler to the body
+// 				$('body').click(me.onPlayerClose);
+// 
+// 				//attach window resize and document scroll paramaters
+// 				$(window).resize(me.positionPlayer);
+// 				$(document).scroll(me.positionPlayer);
+// 			}
+// 			
+// 			//get the data... running through our own little url getter script cause IE can't do cross-domain http requests.  PHP can, and it will send us back the data.
+// 			return me.getVideos();
+// 		};
+// 		
+// 		//gets called for the iframe being ready, or when swfobject is loaded
+// 		me.onYouTubePlayerAPIReady = function(){
+// 			me.API_READY = true;
+// 			return me.loadPlayer();
+// 		};
+// 
+// 		//loads the iframe api asynchrounously per google's examples
+// 		me.loadIFrameAPI = function(){			
+// 			//set the playerAPIReady function global for the api load ~event to work
+// 			window['onYouTubePlayerAPIReady'] = me.onYouTubePlayerAPIReady;		
+// 
+// 			var tag = document.createElement('script');
+// 			tag.src = 'http://www.youtube.com/player_api';
+// 			var firstScriptTag = document.getElementsByTagName('script')[0];
+// 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+// 			//this inserts into the head, and calls a global function (onYouTubePlayerAPIReady)... defined and exposed below.
+// 		};
+// 		
+// 		me.checkForSWFObject = function(){
+// 			return ( typeof swfobject === 'undefined' ? me.swfTimeout = setTimeout( me.checkForSWFObject, 10 ) : me.onYouTubePlayerAPIReady() );
+// 		};
+// 		
+// 		//used for IE7 and below, to load swfObject. (there has to be a better way to do this. . . )
+// 		me.loadSWFObject = function(){
+// 			me.IS_FLASH = true;
+// 			
+// 			var tag = document.createElement('script');
+// 			//tag.onload = me.flashPlayerLoaded;
+// 			tag.src = me.flashPlayerSrc;
+// 			tag.async = true;
+// 			var firstScriptTag = document.getElementsByTagName('script')[0];
+// 			firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
+// 			return me.checkForSWFObject();
+// 		};
+// 		
+// 		//USED ONLY TO LOG OUT PLAYLISTS SO WE CAN GRAB THE IDS TO LOAD THE LIST FOR CLIENT
+// 		me.getUserPlaylists = function(){
+// 			if( me.user ){
+// 				var request = {
+// 					alt: me.ALT,
+// 					v: 2	
+// 				};
+// 				
+// 				return $.getJSON( me.API_USER_PLAYLISTS+'?callback=?', request, function(json){
+// 					console.log('user: '+me.user+', playlists: ', json);
+// 				});
+// 			}
+// 		};
+// 		
+// 		//TODO:  only use local php shiv if necessary (thinking IE here)
+// 		me.getVideos = function(){
+// 			var request = {
+// 				//apiUrl: me.API_USER_UPLOADS,
+// 				alt: me.ALT, //alt is json-c, which somehow magically gets around parsing of json data and cross-domain origin restrictions... but ie can't natively handle it.
+// 				'max-results': me.maxResults,
+// 				'start-index': me.START_INDEX,
+// 				v: 2 //api version 2... defaults to 1
+// 			};
+// 			//console.log( 'me.getVideos', request );
+// 						
+// 			var url = ( me.playlist ? me.API_PLAYLIST_FEED + me.playlist : me.API_USER_UPLOADS ); 
+// 			
+// 			//get the data... append callback=? to make the request for jsonp.
+// 		 	return $.getJSON( url+'?callback=?', request, me.printVideoBlocks );
+// 		};
+// 		
+// 		
+// 		//used as callback on load user videos
+// 		me.printVideoBlocks = function(json, status){
+// 			//console.log('me.printVideoBlocks', json );
+// 			
+// 			me.LOADING = false;
+// 			
+// 			if (status === "success" && json.data) {
+// 				
+// 				if ( json.data.items ) {
+// 					//set total items
+// 					me.TOTAL_ITEMS = json.data.totalItems;
+// 					
+// 					//remove container and paginating if existing already
+// 					$('.easeCont, #'+me.paginateContId).remove();
+// 					
+// 					//make continer
+// 					var cont = $('<div />', {}).addClass('easeCont').appendTo( me.thumbsCont );
+// 					
+// 					//make a block for each video returned
+// 					for (var i=0, j=json.data.items.length; i<j; i++) {
+// 						//playlist feed is different than video feed;
+// 						var video = ( me.playlist ? json.data.items[i].video : json.data.items[i] );
+// 						me.makeVideoBlock( video ).appendTo( cont );
+// 						video = null;
+// 					}
+// 					
+// 					//make the pagination
+// 					if ( json.data.totalItems > me.maxResults )
+// 						me.makePagination().insertAfter( me.thumbsCont );
+// 					
+// 					//loaded!
+// 					me.loadingMask.hide();
+// 					
+// 					//open first video in player
+// 					if (me.FIRST_LOAD) {
+// 						me.FIRST_LOAD = false;
+// 						me.CURRENT_VIDEO = ( me.playlist ? json.data.items[0].video : json.data.items[0] );
+// 						//me.loadPlayer();
+// 					}
+// 				} else {
+// 					//no items returned... this is a weird case when a playlist contains 'rejected' videos that youtube won't dish out.  case i have seen is that it is a duplicate video to one already uploaded.  if that is the only video being fetched when the new pageblock loads, nothing will show.
+// 					
+// 					//so, let's load the first page instead, as long as it's not supposed to be the first load.
+// 					if( !me.FIRST_LOAD ){
+// 						me.page = 1;
+// 						//update start index
+// 						me.updateStartIndex();						
+// 						me.LOADING = true;
+// 						return me.getVideos();
+// 					}
+// 				}
+// 			} else if ( json.error && json.error.message ){
+// 				me.thumbsCont.text( json.error.message );
+// 			}
+// 		};
+// 		
+// 		//callback for loading the youtube flash embed
+// 		me.onYouTubePlayerReady = function(playerId){
+// 			me.onPlayerReady(); //sets a variable
+// 			//set the player
+// 			return me.player = document.getElementById( playerId );
+// 		};
+// 		
+// 		me.loadPlayer = function(){
+// 			//console.log('load player', me.CURRENT_VIDEO);
+// 			if ( !me.API_READY || !me.CURRENT_VIDEO )
+// 				return me.loadTimeout = setTimeout( me.loadPlayer, 10 );
+// 			
+// 			var dim = me.makePlayerDimensions();
+// 			
+// 			if( !me.IS_FLASH ){		
+// 				
+// 			    me.player = new YT.Player( me.playerContId, {
+// 				//return me.player = new YT.Player( me.playerContId, {
+// 			    	height: dim.playerHeight,
+// 			    	width: dim.playerWidth,
+// 			    	videoId: me.CURRENT_VIDEO.id,
+// 			    	events: {
+// 			    		'onReady': me.onPlayerReady
+// 			    	}
+// 			    }); 
+// 			
+// 				//return me.playerCont = $('#'+me.playerContId);
+// 			} else {
+// 				//we are using the flash player				
+// 				//set the global player ready callback
+// 				window['onYouTubePlayerReady'] = me.onYouTubePlayerReady;
+// 				
+// 				var params = { allowScriptAccess: 'always' };
+// 				var atts = { id: me.playerContId };
+// 				swfobject.embedSWF(
+// 					//swfUrlStr - the video location string with added params
+// 					'http://www.youtube.com/v/'+me.CURRENT_VIDEO.id+'?enablejsapi=1&playerapiid='+me.playerContId+'&version=3',
+// 					//replaceElemIdStr
+// 					me.playerContId,
+// 					//widthStr
+// 					dim.playerWidth,
+// 					//heightStr
+// 					dim.playerHeight,
+// 					//swfVersionStr
+// 					'8',
+// 					//xiSwfUrlStr - (Optional) Specifies the URL of your express install SWF. Not used in this example.
+// 					null,
+// 					//flashVarsObj - (Optional) Specifies your FlashVars in name:value pairs. Not used in this example.
+// 					null,
+// 					//parObj - parameters for embed object
+// 					params,
+// 					//AttObj - attributes for the embed object
+// 					atts
+// 				);
+// 			}
+// 
+// 			return me.playerCont = $('#'+me.playerContId);
+// 		};
+// 		
+// 		me.onPlayerReady = function(){
+// 			me.PLAYER_READY = true;
+// 		};
+// 		
+// 		//this is used to calculate the optimal dimensions for the player to be used in different places in this class
+// 		me.makePlayerDimensions = function(){			
+// 			var bW = $(window).width(),
+// 				bH = $(window).height(),
+// 				pW = 0,
+// 				pH = 0;
+// 			
+// 			//if player is lightbox style, then numbers are based on the window width & height
+// 			if ( me.playerIsPopup ){
+// 				var adjW = Math.floor( bW * me.playerPercent );
+// 				
+// 				//uses 16/9 ratio for the window
+// 				if ( bW < bH ){
+// 					pW = adjW;
+// 				} else {
+// 					pW = Math.floor( bH * me.playerPercent * me.playerRatioW / me.playerRatioH );
+// 				}
+// 	
+// 				if ( pW > adjW )
+// 					pW = adjW;
+// 				
+// 				if ( pW > me.playerMaxHeight )
+// 					pW = me.playerMaxHeight;
+// 				
+// 				pH = Math.floor( me.playerRatioH / me.playerRatioW * pW );
+// 				//set after condition
+// 
+// 			} else {
+// 				//otherwise, player hight is based on the width of the container
+// 				pW = $('#'+me.playerContId).width();
+// 				
+// 			}
+// 
+// 			pH = Math.floor( me.playerRatioH / me.playerRatioW * pW );
+// 			//console.log( 'player dimensions', bW, pW, bH, pH );
+// 			
+// 			return {
+// 				baseWidth: bW,
+// 				baseHeight: bH,
+// 				playerWidth: pW,
+// 				playerHeight: pH
+// 			};
+// 		};
+// 
+// 		me.positionPlayer = function(){			
+// 			if ( me.player && me.showPlayer && me.PLAYER_READY ) {
+// 				var	dimensions = me.makePlayerDimensions(),
+// 					bW = dimensions.baseWidth,
+// 					bH = dimensions.baseHeight,
+// 					pW = dimensions.playerWidth, //player width
+// 					pH = dimensions.playerHeight;
+// 				
+// 				//console.log( 'position player', dimensions, bW, bH, pW );
+// 								
+// 				var left = Math.floor( (bW - pW) /2 ),
+// 					//top = Math.floor( $(document).scrollTop() + bH * 0.1 );
+// 					top = Math.floor(  bH * 0.1 );
+// 					
+// 				//console.log( 'positionPlayer', $(me.player), me.player.getPlaybackQuality() );		
+// 				//player.width( pW ).height( pH );
+// 				
+// 				//flash player size is set by dimensions of container, iframe by an API method
+// 				!me.IS_FLASH ?
+// 					me.player.setSize( pW, pH ) :
+// 					me.playerCont.width( pW ).height( pH );
+// 				
+// 				me.playerCont.css({ left: left, top: top });
+// 				
+// 				//console.log( me.playerCont, left);
+// 				me.playerClose.css({ left: left + pW, top: top });
+// 			}
+// 		};
+// 		
+// 		me.loadVideo = function(){
+// 			//console.log( 'me.loadVideo', me.CURRENT_VIDEO, me.player, me.PLAYER_READY);
+// 			//if (me.player) {
+// 			if (me.player && me.PLAYER_READY) {
+// 				me.showPlayer = true;
+// 				me.player.loadVideoById( me.CURRENT_VIDEO.id, 0, 'large');
+// 				
+// 				//position it?
+// 				if( me.playerIsPopup )
+// 					me.positionPlayer();
+// 				
+// 				me.player.playVideo();
+// 			}			
+// 		};
+// 		
+// 		me.closePlayer = function(){
+// 			if (me.player && me.showPlayer) {
+// 				me.showPlayer = false;
+// 				me.player.stopVideo();
+// 								
+// 				//$(me.player).css({ left: -10000 });
+// 				me.playerCont.css({ left: -10000 });
+// 				me.playerClose.css({ left: -10000 });
+// 			}
+// 		};
+// 		
+// 		me.makePagination = function(){
+// 			var block = $('<div />', {
+// 					id: me.paginateContId
+// 				});
+// 			
+// 			//clearfix
+// 			$('<div />').addClass('clearfix').appendTo( block );
+// 			
+// 			//prev button
+// 			$('<a />', { text: me.navPrevText }).addClass( me.navClass+' prev' ).click( me.onPaginClick ).appendTo( block );
+// 			
+// 			//next button
+// 			$('<a />', { text: me.navNextText }).addClass( me.navClass+' next' ).click( me.onPaginClick ).appendTo( block );
+// 			
+// 			//text
+// 			$('<span />', {
+// 				text: 'Page '+me.page+' of '+Math.ceil( me.TOTAL_ITEMS / me.maxResults )
+// 			}).appendTo( block );
+// 			
+// 			//clearfix
+// 			$('<div />').addClass('clearfix').appendTo( block );
+// 			
+// 			return block;
+// 		};
+// 		
+// 		//makes dom element with proper handlers?
+// 		me.makeVideoBlock = function( item ){
+// 			if ( !item ) return false;
+// 			//console.log('me.makeVideoBlock', item );
+// 			
+// 			//create the block, attach data and click handler
+// 			var block = $('<div />', {}).addClass(me.thumbBlockClass).data({ itemData: item }).click(me.onBlockPlay);
+// 			
+// 			if ( item.thumbnail.sqDefault ) {
+// 				$('<div />', {
+// 					html: '<a class="'+me.imgLinkClass+'" title="'+(item.title||'')+': '+(item.description||'')+'"><img src="'+item.thumbnail.sqDefault+'" class="'+me.imgClass+'" /></a>'
+// 				}).addClass( me.imgContClass ).appendTo( block );
+// 			}
+// 			
+// 			if ( item.title ) {
+// 				$('<'+me.titleEl+' />', {
+// 					//html: '<a>'+item.title+'</a>'
+// 					html: item.title
+// 				}).addClass( me.titleClass ).appendTo( block );
+// 			}
+// 			
+// 			if ( item.description ) {
+// 				$('<div />', {
+// 					html: item.description
+// 				}).addClass( me.descClass ).appendTo( block );
+// 			}
+// 			
+// 			$('<a />', {
+// 				text: me.playText
+// 			}).addClass( me.playClass )
+// 			//.click( me.onBlockPlay )
+// 			.appendTo( block );
+// 
+// 			return block;
+// 		};
+// 		
+// 		me.onPaginClick = function(e){
+// 			//console.log('onPaginClick!', e, $(this));
+// 			if (!me.LOADING) {
+// 				
+// 				if ( $(this).hasClass('next') ){
+// 					//go next
+// 					me.page === Math.ceil( me.TOTAL_ITEMS / me.maxResults ) ?
+// 						me.page = 1 :
+// 						me.page++;
+// 				} else {
+// 					//go prev
+// 					me.page === 1 ?
+// 						me.page = Math.ceil( me.TOTAL_ITEMS / me.maxResults ) :
+// 						me.page--;
+// 				}
+// 				
+// 				//update start index
+// 				me.updateStartIndex();
+// 	
+// 				//show loadingMask case it is hidden
+// 				me.loadingMask.show();
+// 				
+// 				me.LOADING = true;
+// 				
+// 				return me.getVideos();
+// 			}
+// 		};
+// 		
+// 		me.onPlayerClose = function(e){
+// 			//console.log('onPlayerClose', e, $(this), e.target );
+// 			//prevent click on player from closing the player
+// 			if ( e.target !== me.player )
+// 				me.closePlayer();	
+// 		};
+// 		
+// 		me.onBlockPlay = function(e){
+// 			//console.log('onBlockPlay!', e, $(this));
+// 			e.stopPropagation();
+// 			
+// 			me.CURRENT_VIDEO = $(this).data('itemData');
+// 			
+// 			return me.loadVideo();			
+// 		};
+// 		
+// 		me.updateStartIndex = function(){
+// 			return me.START_INDEX = ( (me.page - 1) * me.maxResults + 1 );
+// 		};
+// 		
+// 		me.init();
+// 	};
+// 
+// 	window['EaseYouTubePlayer'] = EaseYouTubePlayer;
+// 	
+// })(jQuery);
+// 
 
 
 (function($){
@@ -1180,10 +1180,10 @@ try{
 		// me.data;
 		// me.currentPost = 0;
 		//me.digesting = true;
-		me.nav;
-		me.navUl;
-		me.wrap;
-		me.timeout;
+		me.nav = null;
+		me.navUl = null;
+		me.wrap = null;
+		me.timeout = null;
 		me.placeholder = '';
 		me.page = 1;
 		me.getting = false;
@@ -1322,3 +1322,274 @@ try{
 	window['SyndicatedSubwayTiles'] = SyndicatedSubwayTiles;
 	
 })(jQuery);
+
+/* ===========================================================
+ * bootstrap-tooltip.js v2.0.2
+ * http://twitter.github.com/bootstrap/javascript.html#tooltips
+ * Inspired by the original jQuery.tipsy by Jason Frame
+ * ===========================================================
+ * Copyright 2012 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================== */
+
+!function( $ ) {
+
+  "use strict"
+
+ /* TOOLTIP PUBLIC CLASS DEFINITION
+  * =============================== */
+
+  var Tooltip = function ( element, options ) {
+    this.init('tooltip', element, options)
+  }
+
+  Tooltip.prototype = {
+
+    constructor: Tooltip
+
+  , init: function ( type, element, options ) {
+      var eventIn
+        , eventOut
+
+      this.type = type
+      this.$element = $(element)
+      this.options = this.getOptions(options)
+      this.enabled = true
+
+      if (this.options.trigger != 'manual') {
+        eventIn  = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
+        eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
+        this.$element.on(eventIn, this.options.selector, $.proxy(this.enter, this))
+        this.$element.on(eventOut, this.options.selector, $.proxy(this.leave, this))
+      }
+
+      this.options.selector ?
+        (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
+        this.fixTitle()
+    }
+
+  , getOptions: function ( options ) {
+      options = $.extend({}, $.fn[this.type].defaults, options, this.$element.data())
+
+      if (options.delay && typeof options.delay == 'number') {
+        options.delay = {
+          show: options.delay
+        , hide: options.delay
+        }
+      }
+
+      return options
+    }
+
+  , enter: function ( e ) {
+      var self = $(e.currentTarget)[this.type](this._options).data(this.type)
+
+      if (!self.options.delay || !self.options.delay.show) {
+        self.show()
+      } else {
+        self.hoverState = 'in'
+        setTimeout(function() {
+          if (self.hoverState == 'in') {
+            self.show()
+          }
+        }, self.options.delay.show)
+      }
+    }
+
+  , leave: function ( e ) {
+      var self = $(e.currentTarget)[this.type](this._options).data(this.type)
+
+      if (!self.options.delay || !self.options.delay.hide) {
+        self.hide()
+      } else {
+        self.hoverState = 'out'
+        setTimeout(function() {
+          if (self.hoverState == 'out') {
+            self.hide()
+          }
+        }, self.options.delay.hide)
+      }
+    }
+
+  , show: function () {
+      var $tip
+        , inside
+        , pos
+        , actualWidth
+        , actualHeight
+        , placement
+        , tp
+
+      if (this.hasContent() && this.enabled) {
+        $tip = this.tip()
+        this.setContent()
+
+        if (this.options.animation) {
+          $tip.addClass('fade')
+        }
+
+        placement = typeof this.options.placement == 'function' ?
+          this.options.placement.call(this, $tip[0], this.$element[0]) :
+          this.options.placement
+
+        inside = /in/.test(placement)
+
+        $tip
+          .remove()
+          .css({ top: 0, left: 0, display: 'block' })
+          .appendTo(inside ? this.$element : document.body)
+
+        pos = this.getPosition(inside)
+
+        actualWidth = $tip[0].offsetWidth
+        actualHeight = $tip[0].offsetHeight
+
+        switch (inside ? placement.split(' ')[1] : placement) {
+          case 'bottom':
+            tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
+            break
+          case 'top':
+            tp = {top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2}
+            break
+          case 'left':
+            tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth}
+            break
+          case 'right':
+            tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width}
+            break
+        }
+
+        $tip
+          .css(tp)
+          .addClass(placement)
+          .addClass('in')
+      }
+    }
+
+  , setContent: function () {
+      var $tip = this.tip()
+      $tip.find('.tooltip-inner').html(this.getTitle())
+      $tip.removeClass('fade in top bottom left right')
+    }
+
+  , hide: function () {
+      var that = this
+        , $tip = this.tip()
+
+      $tip.removeClass('in')
+
+      function removeWithAnimation() {
+        var timeout = setTimeout(function () {
+          $tip.off($.support.transition.end).remove()
+        }, 500)
+
+        $tip.one($.support.transition.end, function () {
+          clearTimeout(timeout)
+          $tip.remove()
+        })
+      }
+
+      $.support.transition && this.$tip.hasClass('fade') ?
+        removeWithAnimation() :
+        $tip.remove()
+    }
+
+  , fixTitle: function () {
+      var $e = this.$element
+      if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
+        $e.attr('data-original-title', $e.attr('title') || '').removeAttr('title')
+      }
+    }
+
+  , hasContent: function () {
+      return this.getTitle()
+    }
+
+  , getPosition: function (inside) {
+      return $.extend({}, (inside ? {top: 0, left: 0} : this.$element.offset()), {
+        width: this.$element[0].offsetWidth
+      , height: this.$element[0].offsetHeight
+      })
+    }
+
+  , getTitle: function () {
+      var title
+        , $e = this.$element
+        , o = this.options
+
+      title = $e.attr('data-original-title')
+        || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+
+      title = (title || '').toString().replace(/(^\s*|\s*$)/, "")
+
+      return title
+    }
+
+  , tip: function () {
+      return this.$tip = this.$tip || $(this.options.template)
+    }
+
+  , validate: function () {
+      if (!this.$element[0].parentNode) {
+        this.hide()
+        this.$element = null
+        this.options = null
+      }
+    }
+
+  , enable: function () {
+      this.enabled = true
+    }
+
+  , disable: function () {
+      this.enabled = false
+    }
+
+  , toggleEnabled: function () {
+      this.enabled = !this.enabled
+    }
+
+  , toggle: function () {
+      this[this.tip().hasClass('in') ? 'hide' : 'show']()
+    }
+
+  }
+
+
+ /* TOOLTIP PLUGIN DEFINITION
+  * ========================= */
+
+  $.fn.tooltip = function ( option ) {
+    return this.each(function () {
+      var $this = $(this)
+        , data = $this.data('tooltip')
+        , options = typeof option == 'object' && option
+      if (!data) $this.data('tooltip', (data = new Tooltip(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  $.fn.tooltip.Constructor = Tooltip
+
+  $.fn.tooltip.defaults = {
+    animation: true
+  , delay: 0
+  , selector: false
+  , placement: 'top'
+  , trigger: 'hover'
+  , title: ''
+  , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+  }
+
+}( window.jQuery );

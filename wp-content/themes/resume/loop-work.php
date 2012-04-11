@@ -23,7 +23,7 @@
 	          //  $class = 'active';
 	          //}
 	          //echo '<img src="'.$thumb[0].'" alt="" class="'.$class.'" full="'.$src[0].'" />';
-	          echo '<img src="'.$src[0].'" alt="" class="'.$class.'" full="'.$src[0].'" />';
+	          echo '<img src="'.$src[0].'" alt="" class="'.$class.'" width="'.$src[1].'" height="'.$src[2].'" full="'.$src[0].'" />';
 
 	          //print_r($src); echo '<br /><br />';
 	          //$ct++;

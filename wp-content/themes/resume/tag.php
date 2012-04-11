@@ -9,6 +9,11 @@
 
 get_header(); ?>
 
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
 				<h1><?php
 					printf( __( 'Tag Archives: %s', 'boilerplate' ), '' . single_tag_title( '', false ) . '' );
 				?></h1>

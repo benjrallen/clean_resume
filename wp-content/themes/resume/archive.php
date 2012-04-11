@@ -23,6 +23,12 @@ get_header(); ?>
 	if ( have_posts() )
 		the_post();
 ?>
+
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
 					<h1 class="page-title"><?php
 						if ( is_day() ) :
 							printf( __( 'Daily Archives: %s', 'boilerplate' ), get_the_date() );

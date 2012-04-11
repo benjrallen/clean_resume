@@ -9,6 +9,11 @@
 
 get_header(); ?>
 
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
 				<h1><?php
 					printf( __( 'Category Archives: %s', 'boilerplate' ), '' . single_cat_title( '', false ) . '' );
 				?></h1>

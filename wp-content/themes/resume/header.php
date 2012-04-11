@@ -50,11 +50,13 @@
 				    complete: function () { if ( !window.jQuery ){ Modernizr.load(Ease.TemplateUrl+'/js/jquery.js'); } }
 				},
 				{ test: window.JSON, nope: Ease.TemplateUrl+'/js/json2.js' },
-				/* plugins.js & common.js fordevelopment */
+				<?php /* ?>
+				//plugins.js & common.js fordevelopment 
 				{ load : Ease.TemplateUrl+'/js/plugins.js' },
 				{ load : Ease.TemplateUrl+'/js/common.js' },
-				/* concatenate and optimize seperate script files for deployment using google closure compiler (compiler.jar) in js folder */
-				//{ load : Guru.TemplateUrl+'/js/theme.js' },
+				//concatenate and optimize seperate script files for deployment using google closure compiler (compiler.jar) in js folder
+				<?php */ ?>
+				{ load : Ease.TemplateUrl+'/js/theme.js' },
         { load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js' },
 			]);
 		</script>
@@ -100,6 +102,7 @@
         <nav id="access" class="wrap span12">
     			<?php if (is_front_page()) { echo '<h1>'; } else { echo '<h2>'; } ?>
     				<a id="logo" class="brand" href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+    				  <span class="icon"></span>
     					<span class="logoName"><?php bloginfo( 'name' ); ?></span>
     				</a>
     			<?php if (is_front_page()) { echo '</h1>'; } else { echo '</h2>'; } ?>

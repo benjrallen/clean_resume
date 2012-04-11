@@ -8,6 +8,12 @@
  */
 
 get_header(); ?>
+
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
 <?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>
 				<?php if ( ! empty( $post->post_parent ) ) : ?>
 					<p class="page-title"><a href="<?php echo get_permalink( $post->post_parent ); ?>" title="<?php esc_attr( printf( __( 'Return to %s', 'boilerplate' ), get_the_title( $post->post_parent ) ) ); ?>" rel="gallery"><?php

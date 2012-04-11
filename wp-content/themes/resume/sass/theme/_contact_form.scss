@@ -7,8 +7,10 @@ $inpH: 47px;
 
 /** Contact Form 7 Markup and Style **/
 #contact{
+	position: relative;
 	background: $grayLight;
 	@include padding-leader( 1.25 );
+	@include padding-trailer( 1.25 );
 	
 	& h2{
 		@include padding-trailer(0.5);
@@ -59,7 +61,7 @@ $inpH: 47px;
 			border: 2px solid $yellow;
 			background: lighten( desaturate( $yellow, 30% ), 10%);
 		}
-		& .wpcf7-mail-sent-ok{
+		&.wpcf7-mail-sent-ok{
 			border: 2px solid $green;
 			background: lighten( desaturate( $green, 30% ), 10%);
 		}

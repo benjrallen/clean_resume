@@ -1,3 +1,57 @@
+#header{
+	
+	& .active {
+		& a{
+			background: darken( $base-button-color, 5% );
+		}
+	}
+	
+	& a{
+		
+		&:hover{
+			background: $base-button-color;
+			@include single-transition( all, 0.1s, ease-in-out );
+		}
+	}
+	
+	& #logo{
+		position: relative;
+		padding-left: 54px;
+		& span{
+			display: block;
+			
+			&.logoName{}
+			&.icon{
+				position: absolute;
+				top: 4px;
+				left: 20px;
+				@include main-sprite;
+				background-position: -70px 0;
+				height: 28px;
+				width: 28px;
+				margin-right: 0.25em;
+			}
+		}
+	}
+}
+
+.tooltip-inner{
+	@include sans-serif;
+	@include adjust-font-size-to(15px, 1.5);
+	font-weight: 600;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+/*
+.popover-title{
+	display: none;
+}
+.popover-content{
+	background: #222;
+	//@include adjust-font-size-to(22px);
+	color: $base-white;
+}
+*/
 article#about.hentry{	
 	position: relative;
 	//border-bottom: 1px solid lighten( $base-grey, 40% );
@@ -34,16 +88,27 @@ article#about.hentry{
 		//color: $base-grey;
 	
 		& strong{
-			color: $base-blue;
+			//color: $base-blue;
 			cursor: pointer;
 			cursor: hand;
 			//font-weight: 400;
+			text-indent: -9999em;
+			@include main-sprite;
+			background-position: 0 0;
+			height: 48px;
+			width: 48px;
+			margin-right: 0.25em;
+			@include inline-block;
+			vertical-align: top;
+			@include margin-leader( 0.0625 );
+			margin-left: 0.125em;
+			@include opacity(0.75);
 			
 			&:hover{
-				color: darken( $base-blue, 20% );
+				@include opacity(1);
 			}
 		}
-		@include padding-trailer(0.5);
+		@include padding-trailer(0.25);
 	}
 	
 	& .pic{
@@ -91,7 +156,7 @@ article#about.hentry{
 		
 		&.btn-large{
 			@include margin-leader(0.5);
-			@include adjust-font-size-to( 24px, 1.75 );
+			@include adjust-font-size-to( 30px, 2.75 );
 			display: block;
 			@include raleway;
 			letter-spacing: 2px;

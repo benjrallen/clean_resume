@@ -51,7 +51,7 @@ $nav-shadow: #333;
 
 
 $base-header-color: #bad;
-$base-button-color: #3C83DA;
+$base-button-color: darken( desaturate( $blue, 15% ), 15% );
 
 $base-button-contrast: #53A4DA;
 

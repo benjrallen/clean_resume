@@ -9,6 +9,11 @@
 
 get_header(); ?>
 
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
 <?php
 	/* Queue the first post, that way we know who
 	 * the author is when we try to get their name,
