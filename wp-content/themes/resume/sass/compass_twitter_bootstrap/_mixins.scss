@@ -469,7 +469,8 @@
   background-image: -o-linear-gradient(top, $startColor, $endColor); // Opera 11.10
   //background-image: linear-gradient(top left, $startColor, $endColor); // The standard
   background-repeat: repeat-x;
- filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$startColor}', endColorstr='#{$endColor}', GradientType=0); // IE9 and down
+ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff333333', endColorstr='#ff222222', GradientType=0); // IE9 and down
+//filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$startColor}', endColorstr='#{$endColor}', GradientType=0); // IE9 and down
 }
 @mixin gradient-directional($startColor: #555, $endColor: #333, $deg: 45deg) {
   background-color: $endColor;

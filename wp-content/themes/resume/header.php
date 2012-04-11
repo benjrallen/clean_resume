@@ -51,6 +51,9 @@
 				    complete: function () { if ( !window.jQuery ){ Modernizr.load(Ease.TemplateUrl+'/js/jquery.js'); } }
 				},
 				{ test: window.JSON, nope: Ease.TemplateUrl+'/js/json2.js' },
+				{ test: Modernizr.input.placeholder,
+				  nope: Ease.TemplateUrl+'/js/placeholder.jquery.js'
+				},
 				<?php /* ?>
 				//plugins.js & common.js fordevelopment 
 				{ load : Ease.TemplateUrl+'/js/plugins.js' },

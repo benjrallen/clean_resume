@@ -8,7 +8,8 @@
 		$base-grey 0 12px 24px -16px,
 		$base-grey 0 -12px 24px -16px
 	);
-
+	background: $base-white;
+	
 	//@include box-shadow( $base-grey 0 -12px 24px -16px inset );
 
 	//$mapBg: lighten(desaturate( $blue, 40% ), 50%);

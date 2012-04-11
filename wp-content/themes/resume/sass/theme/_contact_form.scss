@@ -32,7 +32,7 @@ $inpH: 47px;
 		display: block;
 		color: $base-white;
 		@include border-radius( 3px );
-		@include pie;
+		//@include pie;
 		position: absolute;
 	}
 
