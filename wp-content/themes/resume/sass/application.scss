@@ -77,6 +77,11 @@ $sidebar-width: 232px;
 	display: block;
 	float: none;
 }
+
+#resumeHref{
+	display: none;
+}
+
 /*
 .arrow.big{
 	@include main-sprite;
@@ -90,9 +95,6 @@ $sidebar-width: 232px;
 	position: relative;
 }
 
-#resumeHref{
-	display: none;
-}
 
 .sep{
 	//display: inline-block;
