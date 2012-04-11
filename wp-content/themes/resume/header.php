@@ -27,7 +27,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" /> 
 		<link rel="profile" href="http://gmpg.org/xfn/11" />
-		<link rel="stylesheet" href="<?php bloginfo( 'template_directory' ); ?>/css/application.css" />
+		<link rel="stylesheet" href="<?php bloginfo( 'template_directory' ); ?>/css/application.css?v=2" />
 		<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 
 		<script type="text/javascript">
@@ -38,7 +38,7 @@
 			Ease.wpVersion = '<?php echo trim(get_bloginfo("version")); ?>';
 		</script>
 
-		<script src="<?php bloginfo('template_directory'); ?>/js/modernizr.js"></script>
+		<script src="<?php bloginfo('template_directory'); ?>/js/modernizr.js?v=2"></script>
 
 		<script type="text/javascript">
       var _gaq = _gaq || [];
@@ -56,7 +56,7 @@
 				{ load : Ease.TemplateUrl+'/js/common.js' },
 				//concatenate and optimize seperate script files for deployment using google closure compiler (compiler.jar) in js folder
 				<?php */ ?>
-				{ load : Ease.TemplateUrl+'/js/theme.js' },
+				{ load : Ease.TemplateUrl+'/js/theme.js?v=2' },
         { load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js' },
 			]);
 		</script>
