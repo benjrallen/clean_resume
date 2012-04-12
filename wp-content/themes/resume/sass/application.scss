@@ -138,14 +138,14 @@ $sidebar-width: 232px;
 	
 	@include adjust-font-size-to(10px);
 	@include sans-serif;
-	color: $grayLighter;
+	color: $base-black;
 	padding-right: 1em;
 	text-transform: lowercase;
 	letter-spacing: 1px;
 	cursor: pointer;
 	cursor: hand;
 	&:hover{
-		color: $base-white;
+		//color: $base-white;
 		text-decoration: none;
 	}
 }

@@ -228,7 +228,8 @@ section{
 	height: 600px;
 	//background: lighten(desaturate( $blue, 30% ), 30%);
 	//background: $grayLighter;
-	background: lighten( desaturate( $orange, 0% ), 20% );
+	//background: lighten( desaturate( $orange, 0% ), 20% );
+	background: $base-white;
 	z-index: 5;
 	@include pie;
 	background-image: url( '../images/grid-48px.png');
