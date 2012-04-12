@@ -74,8 +74,8 @@ $inpH: 47px;
 		margin: 0;
 		
 		&.wpcf7-validation-errors{
-			border: 2px solid $yellow;
-			background: lighten( desaturate( $yellow, 30% ), 10%);
+			border: 2px solid $orange;
+			background: lighten( desaturate( $orange, 30% ), 10%);
 		}
 		&.wpcf7-mail-sent-ok{
 			border: 2px solid $green;
