@@ -59,7 +59,7 @@
 				{ load : Ease.TemplateUrl+'/js/plugins.js' },
 				{ load : Ease.TemplateUrl+'/js/common.js' },
 				//concatenate and optimize seperate script files for deployment using google closure compiler (compiler.jar) in js folder
-				<?php */ ?>
+				<?php /* ?>
 				{ load : Ease.TemplateUrl+'/js/theme.js?v=2' },
         { load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js' },
 			]);
@@ -112,7 +112,7 @@
     			<?php if (is_front_page()) { echo '</h1>'; } else { echo '</h2>'; } ?>
 
           <?php
-
+            /*
             $args = array(
             		'container' => false,
             		'menu_class' => 'nav',
@@ -121,7 +121,7 @@
             	);
 
             wp_nav_menu($args);
-
+            */
           ?>
           <div class="clearfix"></div>
         </nav>

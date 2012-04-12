@@ -33,7 +33,20 @@
 			}
 		}
 	}
+	
+	& li{
+		//@include single-transition( background, $base-transition-time, ease-in-out );
+	}
+	
+	& #topLink{
+		@include sans-serif;
+		cursor: default;
+		@include adjust-font-size-to( 9px );
+		//@include single-transition( color, $base-transition-time, ease-in-out );		
+	}
 }
+
+
 
 .tooltip-inner{
 	@include sans-serif;
@@ -136,8 +149,8 @@ article#about.hentry{
 		//font-weight: 600;
 				
 		& p{
-			@include crimson;
-			@include adjust-font-size-to( 18px, 1.5 );
+			//@include crimson;
+			@include adjust-font-size-to( 16px, 1.5 );
 			color: darken( $base-grey, 10% );
 
 			//@include column-count(2);
@@ -200,7 +213,27 @@ section{
 				padding-right: 0.5em;
 				background: $base-white;
 				@include margin-leader( -0.5 );
+				
+				&.icon{
+					display: none;
+				}
 			}
 		}
+		
 	}
+}
+
+
+#footer{
+	height: 600px;
+	//background: lighten(desaturate( $blue, 30% ), 30%);
+	//background: $grayLighter;
+	background: lighten( desaturate( $orange, 0% ), 20% );
+	z-index: 5;
+	@include pie;
+	background-image: url( '../images/grid-48px.png');
+	@include box-shadow( 
+		//$base-grey 0 12px 24px -16px,
+		$grayDarker 0 -12px 24px -16px
+	);
 }

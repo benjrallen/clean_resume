@@ -10,6 +10,16 @@
  * @since Boilerplate 1.0
  */
 ?>
+
+
+      <footer id="footer" role="contentinfo" class="row">
+      		<div class="span12 wrap">
+      		</div>
+
+          <a id="subwayTilesLink">Subway Tiles</a>
+
+      </footer><!-- footer -->
+
 		</section><!-- #main -->
 		
 		<div id="resumeHref"><?php echo ba_get_resume_href(); ?></div>

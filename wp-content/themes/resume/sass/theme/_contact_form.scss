@@ -8,12 +8,28 @@ $inpH: 47px;
 /** Contact Form 7 Markup and Style **/
 #contact{
 	position: relative;
-	background: $grayLight;
+	//background: $grayLight;
+	//background: lighten(desaturate( $orange, 40% ), 30%);
+	//background: lighten(desaturate( $yellow, 10% ), 30%);
+	background: darken(desaturate( $blue, 30% ), 10%);
+
+	@include padding-trailer( 0.25 );
+
+	//z-index: 15;
+
 	@include padding-leader( 1.25 );
 	@include padding-trailer( 1.25 );
 	
+	//@include box-shadow(
+	//	$base-grey 0 -12px 24px -16px
+	//);
+	//@include pie;
+	
 	& h2{
 		@include padding-trailer(0.5);
+		//color: $base-white;
+		color: $grayLighter;
+		@include adjust-font-size-to( 32px );
 	}
 	
 	& p{
@@ -84,14 +100,15 @@ $inpH: 47px;
 	}
 	
 	& .meta{
-		//@include margin-trailer();
-		@include adjust-font-size-to( 16px );
+		@include margin-leader(0.25);
+		@include adjust-font-size-to( 12px );
 		@include sans-serif;
-		//text-transform: uppercase;
-		color: $gray;
+		text-transform: lowercase;
+		color: $grayLighter;
+		//letter-spacing: 1px;
 		
 		& a{
-			color: $gray;
+			color: $base-white;
 		}
 	}
 	
@@ -117,12 +134,12 @@ $inpH: 47px;
 	}	
 
 	& input[type="text"], & textarea{
-		background: $gray;
-		color: $base-white;
+		background: $grayLighter;
+		color: $base-black;
 		border: 1px solid transparent;
 		
 		&:focus{
-			background: $grayLighter;
+			background: $base-white;
 			color: $base-black;
 			
 			@include single-transition( background, 0.1s, ease-in-out );
@@ -136,7 +153,9 @@ $inpH: 47px;
 		
 		&[type="submit"]{
 			width: 101%;
-			height: 4.25em;
+			@include adjust-font-size-to( 24px );
+			//line-height: 2.5em;
+			height: 2.9em;
 		}
 	}
 }

@@ -48,8 +48,8 @@
 
 	function scrollToLinks(){
 		var links = [
-			{ key: '#work', el: findNavLink('portfolio') },
-			{ key: '#about', el: findNavLink('home') },
+			//{ key: '#work', el: findNavLink('portfolio') },
+			{ key: '#about', el: $('#topLink') },
 			{ key: '#places', el: $('.page-title strong') },
 			{ key: '#contact', el: $('a.contact') }
 		];
@@ -81,10 +81,10 @@
 						});
 					//}
 					
-					$('#header').find('.active').removeClass('active');
-					if( $('#header').find(this).length ){
-						$this.el.parent().addClass('active');
-					}
+					// $('#header').find('.active').removeClass('active');
+					// if( $('#header').find(this).length ){
+					// 	$this.el.parent().addClass('active');
+					// }
 					
 				};
 				
@@ -100,7 +100,8 @@
 		if( $('#resumeHref').length ){
 			var href = $('#resumeHref').text(),
 				navlinks = $('#header').find('a'),
-				link = findNavLink('resume');
+				//link = findNavLink('resume');
+				link = $('#resume');
 						
 			if( link ){
 				link.attr({
@@ -112,24 +113,24 @@
 			link = null;
 		}
 	}
-
-	function findNavLink( title ){
-		if( !title ) return false;
-		
-		var navlinks = $('#header').find('a'),
-			link = false;
-			
-			$.each( navlinks, function(){
-				if( $(this).text().toLowerCase() == title ){
-					link = $(this);
-					return false;
-				}
-			});
-			navlinks = null;
-			
-			return link;
-	}
-
+	// 
+	// function findNavLink( title ){
+	// 	if( !title ) return false;
+	// 	
+	// 	var navlinks = $('#header').find('a'),
+	// 		link = false;
+	// 		
+	// 		$.each( navlinks, function(){
+	// 			if( $(this).text().toLowerCase() == title ){
+	// 				link = $(this);
+	// 				return false;
+	// 			}
+	// 		});
+	// 		navlinks = null;
+	// 		
+	// 		return link;
+	// }
+	// 
 	function subwayTiles(){
 		//handle click on the stLink to open up the interface, but only do it for webkit cause webkit is awesome
 		//var stLink = findNavLink('pictures');

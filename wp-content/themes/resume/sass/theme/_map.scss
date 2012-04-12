@@ -5,11 +5,11 @@
 
 	@include pie;
 	@include box-shadow( 
-		$base-grey 0 12px 24px -16px,
+		$grayDarker 0 12px 24px -16px,
 		$base-grey 0 -12px 24px -16px
 	);
 	background: $base-white;
-	
+		
 	//@include box-shadow( $base-grey 0 -12px 24px -16px inset );
 
 	//$mapBg: lighten(desaturate( $blue, 40% ), 50%);
@@ -27,9 +27,24 @@
 
 		& .divider{
 			& span{
+				&.icon{
+					@include inline-block;
+					vertical-align: bottom;
+					
+					height: 48px;
+					width: 48px;
+					margin-top: 22px;
+					//position: relative;
+					//top: 6px;
+					padding-right: 0.125em;
+					@include main-sprite;
+					background-color: $base-white;
+					background-position: 0 -100px;
+				}
 			}
 		}
 	}
+
 	
 	& .list{
 	}

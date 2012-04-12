@@ -8,6 +8,11 @@
  */
 
 get_header(); ?>
+
+<script type="text/javascript">
+  window.location.href = Ease.Url;
+</script>
+
 <?php get_sidebar(); ?>
 	<article id="post-0" class="post error404 not-found hentry" role="main">
 		<header class="parent-title">

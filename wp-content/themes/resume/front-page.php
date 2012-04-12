@@ -187,9 +187,7 @@ get_header(); ?>
     </div>
 
   </div>
-  
-  <a id="subwayTilesLink">Subway Tiles</a>
-  
+    
 </section>
 
 

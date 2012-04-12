@@ -769,7 +769,7 @@ function ba_get_resume_href(){
 function make_section_header( $text = '' ){
   
   return '<header class="section-header wrap span12">'.
-            '<h3 class="divider"><span>'.$text.'</span></h3>'.
+            '<h3 class="divider"><span><span class="icon"></span>'.$text.'</span></h3>'.
             '<div class="clearfix"></div>'.
           '</header>';
   
