@@ -580,7 +580,7 @@ function addBackPostFeed() {
 //add image sizes
 add_image_size( 'page-thumb', 220, 220, false );
 add_image_size( 'project-thumb', 100, 150, false );
-add_image_size( 'project-img', 640, 1500, false );
+add_image_size( 'project-img', 700, 1500, false );
 
 
 //add page excerpts if necessary
