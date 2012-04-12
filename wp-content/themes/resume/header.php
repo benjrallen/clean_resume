@@ -59,7 +59,7 @@
 				{ load : Ease.TemplateUrl+'/js/plugins.js' },
 				{ load : Ease.TemplateUrl+'/js/common.js' },
 				//concatenate and optimize seperate script files for deployment using google closure compiler (compiler.jar) in js folder
-				<?php /* ?>
+				<?php */ ?>
 				{ load : Ease.TemplateUrl+'/js/theme.js?v=2' },
         { load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js' },
 			]);
