@@ -9,6 +9,11 @@ body{
 	//@include crimson;
 	@include sans-serif;
 	background: $base-white;
+	min-width: $base-width;
+}
+
+#header{
+	min-width: $base-width;
 }
 
 .page-title{

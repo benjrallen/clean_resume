@@ -24,7 +24,9 @@
 			 */
 			wp_title( '|', true, 'right' );
 		?></title>
+		<?php /* ?>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <?php */ ?>
     <link rel="shortcut icon"  href="<?php bloginfo( 'url' ); ?>/favicon.png">
 		<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" /> 
 		<link rel="profile" href="http://gmpg.org/xfn/11" />
